@@ -1,0 +1,48 @@
+package UORA.Station;
+
+import java.util.Random;
+
+public class StandardOBO implements OBOInterface {
+
+    private double obo;
+
+    private static int ocwMin = 8;
+    private static int ocwMax = 64;
+    private static Random random = new Random();
+
+
+    private int ocw;
+
+    public StandardOBO() {
+        ocw = ocwMin;
+        initOBO();
+    }
+
+    @Override
+    public void minus(int the_number_of_ru) {
+        ocw -= the_number_of_ru;
+    }
+
+    @Override
+    public void initOBO() {
+        obo = random.nextInt(ocw) + 1;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        if(obo <= 0) return true;
+        else return false;
+    }
+
+    @Override
+    public void success() {
+        ocw = ocwMin;
+        initOBO();
+    }
+
+    @Override
+    public void fail() {
+        ocw = 2*ocw + 1;
+        if(ocw > ocwMax) ocw = ocwMax;
+    }
+}
