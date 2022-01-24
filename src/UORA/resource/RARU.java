@@ -15,8 +15,17 @@ public class RARU {
         stations = new ArrayList<>();
     }
 
+    public List<Station> getStations() {return stations;}
+
     public void use(Station station) {
         stations.add(station);
     }
 
+    @Override
+    public String toString() {
+        return "RARU{" +
+                "id=" + id +
+                ", stations=" + stations +
+                '}';
+    }
 }

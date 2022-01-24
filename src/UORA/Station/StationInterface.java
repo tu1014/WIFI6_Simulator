@@ -1,8 +1,11 @@
 package UORA.Station;
 
+import UORA.resource.TriggerFrame;
+
 public interface StationInterface {
 
-    public void sendToAP();
-    public void receiveTF();
+    public void receiveTF(TriggerFrame tf);
+    public void receiveACK(boolean isSuccess);
+    public void send(TriggerFrame tf);
 
 }

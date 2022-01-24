@@ -30,8 +30,7 @@ public class StandardOBO implements OBOInterface {
 
     @Override
     public boolean isAvailable() {
-        if(obo <= 0) return true;
-        else return false;
+        return (obo <= 0);
     }
 
     @Override

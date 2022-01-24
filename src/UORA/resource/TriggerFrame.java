@@ -17,5 +17,7 @@ public class TriggerFrame {
     public RARU getRARU(int index) {
         return ruList.get(index);
     }
+    public List<RARU> getRuList() {return ruList;}
+    public void addRU(RARU ru) {ruList.add(ru);}
 
 }

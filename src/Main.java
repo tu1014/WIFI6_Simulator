@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Main {
 
-    static int NUM_STATION = 100;
-    static int NUM_TRANSMISSION;
+    static int NUM_STATION = 10;
+    static int NUM_TRANSMISSION = 30;
 
     public static void main(String[] args) {
 
@@ -22,10 +22,9 @@ public class Main {
         for(int i=0; i<NUM_TRANSMISSION; i++) {
 
             ap.sendTF();
+            ap.sendACK();
 
         }
-
-
 
 
     }
