@@ -9,11 +9,7 @@ public class ChannelAccessOBO implements OBOInterface {
     private double obo;
     private double ocw;
 
-    private double a = 1; // 알파
-    private double newResultRate = 0.6;
-
-    private static double A_MIN = 0.1;
-    private static double A_MAX = 10;
+    private double a = 0.5; // 알파
 
     private static double ocwMin = 8;
     private static double ocwMax = 64;
@@ -24,33 +20,10 @@ public class ChannelAccessOBO implements OBOInterface {
     public void minus(double... params) {
 
         double num_raru = params[0];
-        double num_station = params[1];
-        double num_fail = params[2];
 
-        double networkStatus = num_raru/(num_station + num_fail);
-
-        calA(networkStatus);
         obo -= a*num_raru;
 
-    }
 
-    public void calA(double networkStatus) {
-        double tmp;
-
-        if(networkStatus >= 1) {
-            tmp = ((double)1) + (networkStatus * ocwMin / ocwMax);
-        } else {
-            tmp = ((double)1) - (ocwMin/ocwMax/networkStatus);
-        }
-
-        if(tmp < A_MIN) tmp = A_MIN;
-        if(tmp > A_MAX) tmp = A_MAX;
-
-        a = (((double)1) - newResultRate)*a + newResultRate*tmp;
-
-        /*System.out.println("네트워크 상태 : " + networkStatus);
-        System.out.println("새로 계산한 알파 : " + tmp);
-        System.out.println("가중치 부여 알파 : " + a);*/
     }
 
     @Override

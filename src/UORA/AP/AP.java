@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AP {
 
-    public static int NUM_STATION = 250;
+    public static int NUM_STATION = 100;
     public static int NUM_TRANSMISSION = 100000;
     public static int DIFS = 18; // 단위 us
     public static int SIFS = 16; // 단위 us
@@ -87,7 +87,7 @@ public class AP {
 
         // station들 생성
         for(int i=0; i<NUM_STATION; i++) {
-            addStation(StationFactory.createStandardStation());
+            addStation(StationFactory.createChannelAccessStation());
         }
 
         for(int i=0; i<NUM_TRANSMISSION; i++) {
