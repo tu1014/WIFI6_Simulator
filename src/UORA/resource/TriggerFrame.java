@@ -7,8 +7,9 @@ import java.util.List;
 
 public class TriggerFrame {
 
-    public TriggerFrame() {
+    public TriggerFrame(int num_station) {
         ruList = new ArrayList<>();
+        the_number_of_sta = num_station;
     }
 
     private List<RARU> ruList;

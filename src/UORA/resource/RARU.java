@@ -1,6 +1,7 @@
 package UORA.resource;
 
 import UORA.Station.Station;
+import UORA.Station.StationInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +9,16 @@ import java.util.List;
 public class RARU {
 
     public int id;
-    private List<Station> stations;
+    private List<StationInterface> stations;
 
     public RARU(int id) {
         this.id = id;
         stations = new ArrayList<>();
     }
 
-    public List<Station> getStations() {return stations;}
+    public List<StationInterface> getStations() {return stations;}
 
-    public void use(Station station) {
+    public void use(StationInterface station) {
         stations.add(station);
     }
 

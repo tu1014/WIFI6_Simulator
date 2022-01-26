@@ -2,6 +2,7 @@ package UORA.AP;
 
 import UORA.Station.Station;
 import UORA.Station.StationFactory;
+import UORA.Station.StationInterface;
 import UORA.resource.RARU;
 import UORA.resource.TriggerFrame;
 
@@ -100,7 +101,7 @@ public class AP {
     // 트리거 프레임 전송
     public void sendTF() {
 
-        triggerFrame = new TriggerFrame();
+        triggerFrame = new TriggerFrame(NUM_STATION);
         allocateRU();
 
         // stations.stream().forEach(station -> station.receiveTF(triggerFrame));
@@ -129,7 +130,7 @@ public class AP {
         List<RARU> ruList = triggerFrame.getRuList();
         for(RARU ru : ruList) {
 
-            List<Station> stationList = ru.getStations();
+            List<StationInterface> stationList = ru.getStations();
 
             int num_station = stationList.size();
 
