@@ -23,15 +23,25 @@ public class Station implements StationInterface {
     @Override
     public void receiveTF(TriggerFrame tf) {
 
+        // System.out.println("<" + id + "번 STA>");
+        // System.out.println("tf 수신 이전 obo : " + obo);
+
         // obo 감소
         obo.minus(tf.getTheNumberOfRARU());
 
+        // System.out.println("tf 수신 이후 obo : " + obo);
+
         // 전송 가능하다면 전송
-        if(obo.isAvailable()) send(tf);
+        if(obo.isAvailable()) {
+            // System.out.println("전송");
+            send(tf);
+        }
     }
 
     @Override
     public void receiveACK(boolean isSuccess) {
+
+        // System.out.println(id + "번 STA 전송 성공 여부 : " + isSuccess);
 
         if(isSuccess) obo.success();
         else obo.fail();

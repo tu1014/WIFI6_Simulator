@@ -20,7 +20,7 @@ public class StandardOBO implements OBOInterface {
 
     @Override
     public void minus(int the_number_of_ru) {
-        ocw -= the_number_of_ru;
+        obo -= the_number_of_ru;
     }
 
     @Override
@@ -43,5 +43,11 @@ public class StandardOBO implements OBOInterface {
     public void fail() {
         ocw = 2*ocw + 1;
         if(ocw > ocwMax) ocw = ocwMax;
+        initOBO();
+    }
+
+    @Override
+    public String toString() {
+        return "" + obo;
     }
 }
