@@ -1,4 +1,6 @@
-package UORA.Station;
+package UORA.Station.Standard;
+
+import UORA.Station.OBOInterface;
 
 import java.util.Random;
 
@@ -19,8 +21,9 @@ public class StandardOBO implements OBOInterface {
     }
 
     @Override
-    public void minus(int the_number_of_ru) {
-        obo -= the_number_of_ru;
+    // param : raru의 수
+    public void minus(double... params) {
+        obo -= params[0];
     }
 
     @Override

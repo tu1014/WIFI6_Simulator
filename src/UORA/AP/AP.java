@@ -1,6 +1,5 @@
 package UORA.AP;
 
-import UORA.Station.Station;
 import UORA.Station.StationFactory;
 import UORA.Station.StationInterface;
 import UORA.resource.RARU;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class AP {
 
-    public static int NUM_STATION = 100;
+    public static int NUM_STATION = 250;
     public static int NUM_TRANSMISSION = 100000;
     public static int DIFS = 18; // 단위 us
     public static int SIFS = 16; // 단위 us
@@ -43,6 +42,19 @@ public class AP {
 
         System.out.println("---------------------------------------------------------");
 
+        double networkStatus = ((double)NUM_RU)/(double)NUM_STATION;
+        double a;
+
+        if(networkStatus >= 1) {
+            a = ((double)1) + (networkStatus * 0.125);
+        } else {
+            a = ((double)1) - (0.125/networkStatus);
+        }
+
+        if(a < 0.1) a = 0.1;
+        if(a > 10) a = 10;
+
+        System.out.println("알파 예상값 : " + a);
         System.out.println("TWT_INTERVAL : " + TWT_INTERVAL);
         System.out.println("TF_TRANSMISSION : " + TF_TRANSMIT_TIME);
         System.out.println("BA_TRANSMISSION : " + BA_TRANSMIT_TIME);
@@ -87,7 +99,7 @@ public class AP {
 
     }
 
-    private List<Station> stations;
+    private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
 
     public AP() {
@@ -106,7 +118,7 @@ public class AP {
 
         // stations.stream().forEach(station -> station.receiveTF(triggerFrame));
 
-        for(Station station : stations) {
+        for(StationInterface station : stations) {
             station.receiveTF(triggerFrame);
         }
 
@@ -138,7 +150,7 @@ public class AP {
 
             total_transmit += num_station;
 
-            for(Station station : stationList) {
+            for(StationInterface station : stationList) {
                 // System.out.println(ru);
                 boolean isSuccess = (num_station == 1);
 
@@ -153,7 +165,7 @@ public class AP {
 
     }
 
-    public void addStation(Station station) {
+    public void addStation(StationInterface station) {
         stations.add(station);
     }
 

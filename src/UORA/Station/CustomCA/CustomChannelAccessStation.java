@@ -1,12 +1,14 @@
-package UORA.Station;
+package UORA.Station.CustomCA;
 
 import UORA.AP.AP;
+import UORA.Station.OBOInterface;
+import UORA.Station.StationInterface;
 import UORA.resource.RARU;
 import UORA.resource.TriggerFrame;
 
 import java.util.Random;
 
-public class Station implements StationInterface {
+public class CustomChannelAccessStation implements StationInterface {
 
     private static int idCounter = 0;
     private static Random random = new Random();
@@ -15,7 +17,9 @@ public class Station implements StationInterface {
     private int id;
     private OBOInterface obo;
 
-    public Station(OBOInterface obo) {
+    private int failCount = 0;
+
+    public CustomChannelAccessStation(OBOInterface obo) {
         id = idCounter++;
         this.obo = obo;
     }
@@ -27,7 +31,11 @@ public class Station implements StationInterface {
         // System.out.println("tf 수신 이전 obo : " + obo);
 
         // obo 감소
-        obo.minus(tf.getTheNumberOfRARU());
+        obo.minus(
+                tf.getTheNumberOfRARU(),
+                tf.getThe_number_of_sta(),
+                failCount
+                );
 
         // System.out.println("tf 수신 이후 obo : " + obo);
 
@@ -43,8 +51,14 @@ public class Station implements StationInterface {
 
         // System.out.println(id + "번 STA 전송 성공 여부 : " + isSuccess);
 
-        if(isSuccess) obo.success();
-        else obo.fail();
+        if(isSuccess) {
+            failCount = 0;
+            obo.success();
+        }
+        else {
+            failCount++;
+            obo.fail();
+        }
 
     }
 

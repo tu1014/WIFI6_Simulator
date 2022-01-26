@@ -15,6 +15,10 @@ public class TriggerFrame {
     private List<RARU> ruList;
     private int the_number_of_sta;
 
+    public int getThe_number_of_sta() {
+        return the_number_of_sta;
+    }
+
     public int getTheNumberOfRARU() {
         return ruList.size();
     }
