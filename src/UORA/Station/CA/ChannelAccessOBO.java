@@ -38,13 +38,14 @@ public class ChannelAccessOBO implements OBOInterface {
 
     @Override
     public void success() {
-        ocw = ocwMin;
+        ocw = ocw/2;
+        if(ocw < ocwMin) ocw = ocwMin;
         initOBO();
     }
 
     @Override
     public void fail() {
-        ocw = 2*ocw + 1;
+        ocw = ocw + ocwMin/2;
         if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }

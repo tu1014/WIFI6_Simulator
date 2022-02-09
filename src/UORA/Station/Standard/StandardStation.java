@@ -59,6 +59,7 @@ public class StandardStation implements StationInterface {
 
     }
 
+
     @Override
     public String toString() {
         return id + "번 STA";

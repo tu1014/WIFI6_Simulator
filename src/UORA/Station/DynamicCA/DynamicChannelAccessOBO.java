@@ -10,7 +10,7 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     private double ocw;
 
     private double a = 1; // 알파
-    private double newResultRate = 0.6;
+    private double newResultRate = 0.125;
 
     private static double A_MIN = 0.1;
     private static double A_MAX = 10;
@@ -27,6 +27,7 @@ public class DynamicChannelAccessOBO implements OBOInterface {
         double num_station = params[1];
         double num_fail = params[2];
 
+        // 재전송 시도 횟수에 가중치를 부여하면 어떨까??
         double networkStatus = num_raru/(num_station + num_fail);
 
         calA(networkStatus);
@@ -65,13 +66,14 @@ public class DynamicChannelAccessOBO implements OBOInterface {
 
     @Override
     public void success() {
-        ocw = ocwMin;
+        ocw = ocw/2;
+        if(ocw < ocwMin) ocw = ocwMin;
         initOBO();
     }
 
     @Override
     public void fail() {
-        ocw = 2*ocw + 1;
+        ocw = ocw + ocwMin/2;
         if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }

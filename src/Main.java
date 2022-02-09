@@ -6,13 +6,21 @@ public class Main {
 
         AP ap = new AP();
 
-        for(int i=0; i<5; i++) {
+        int num_simulation = 50;
+
+        /*for(int i=0; i<num_simulation; i++) {
 
             ap.init();
-            ap.run();
-            ap.printPerformance();
+            // ap.run();
+            // ap.dynamicRun();
+            ap.dynamicStation();
+            ap.writePerformance();
 
         }
+
+        ap.printAvgPerformance();*/
+
+        ap.printAlphaExpected();
 
     }
 }
