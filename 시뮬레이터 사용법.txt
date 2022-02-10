@@ -1,0 +1,13 @@
+
+테스트를 실행하려면 Main 클래스의 main 메서드를 실행한다.
+
+STA의 수를 변경하려면 AP 클래스의 NUM-STAION 변수의 값을 변경한다.
+
+테스트에 사용할 알고리즘을 변경하려면 AP의 addStation(int amount) 메서드 내부에서 호출되는 StationFactory의 메서드만 바꾸면 된다.
+- UORA 표준
+- CA
+- DCA
+위 3가지 알고리즘 지원
+
+ap의 run 메서드는 STA의 수를 고정시킨 후 10만번의 TF를 보내고 성능을 측정한다.
+ap의 dynamicStation 메서드는 가중치에 따른 성능을 측정하기 위한 테스트 케이스이다.
