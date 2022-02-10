@@ -4,6 +4,7 @@ import UORA.Station.OBOInterface;
 
 import java.util.Random;
 
+// 논문에서 제안한 알고리즘
 public class ChannelAccessOBO implements OBOInterface {
 
     private double obo;

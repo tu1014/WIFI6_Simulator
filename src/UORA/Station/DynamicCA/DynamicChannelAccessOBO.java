@@ -10,7 +10,7 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     private double ocw;
 
     private double a = 1; // 알파
-    private double newResultRate = 0.125;
+    private double newResultRate = 0.125; // 가중치
 
     private static double A_MIN = 0.1;
     private static double A_MAX = 10;
@@ -27,15 +27,14 @@ public class DynamicChannelAccessOBO implements OBOInterface {
         double num_station = params[1];
         double num_fail = params[2];
 
-        // 재전송 시도 횟수에 가중치를 부여하면 어떨까??
         double networkStatus = num_raru/(num_station + num_fail);
 
-        calA(networkStatus);
+        calAlpha(networkStatus);
         obo -= a*num_raru;
 
     }
 
-    public void calA(double networkStatus) {
+    public void calAlpha(double networkStatus) {
         double tmp;
 
         if(networkStatus >= 1) {
@@ -49,9 +48,6 @@ public class DynamicChannelAccessOBO implements OBOInterface {
 
         a = (((double)1) - newResultRate)*a + newResultRate*tmp;
 
-        /*System.out.println("네트워크 상태 : " + networkStatus);
-        System.out.println("새로 계산한 알파 : " + tmp);
-        System.out.println("가중치 부여 알파 : " + a);*/
     }
 
     @Override

@@ -10,25 +10,20 @@ import java.util.Random;
 
 public class DynamicChannelAccessStation implements StationInterface {
 
-    private static int idCounter = 0;
     private static Random random = new Random();
 
-    private AP ap;
-    private int id;
     private OBOInterface obo;
 
+    // 네트워크 상태를 파악하기 위한 변수
+    // 전송에 성공하면 초기화
     private int failCount = 0;
 
     public DynamicChannelAccessStation(OBOInterface obo) {
-        id = idCounter++;
         this.obo = obo;
     }
 
     @Override
     public void receiveTF(TriggerFrame tf) {
-
-        // System.out.println("<" + id + "번 STA>");
-        // System.out.println("tf 수신 이전 obo : " + obo);
 
         // obo 감소
         obo.minus(
@@ -37,19 +32,14 @@ public class DynamicChannelAccessStation implements StationInterface {
                 failCount
                 );
 
-        // System.out.println("tf 수신 이후 obo : " + obo);
-
         // 전송 가능하다면 전송
         if(obo.isAvailable()) {
-            // System.out.println("전송");
             send(tf);
         }
     }
 
     @Override
     public void receiveACK(boolean isSuccess) {
-
-        // System.out.println(id + "번 STA 전송 성공 여부 : " + isSuccess);
 
         if(isSuccess) {
             failCount = 0;
@@ -71,9 +61,4 @@ public class DynamicChannelAccessStation implements StationInterface {
 
     }
 
-
-    @Override
-    public String toString() {
-        return id + "번 STA";
-    }
 }
