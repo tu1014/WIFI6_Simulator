@@ -122,7 +122,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createDynamicChannelAccessStation());
+            addStation(StationFactory.createChannelAccessStation());
     }
 
     public void removeStation(int amount) {
