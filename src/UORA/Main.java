@@ -18,7 +18,6 @@ public class Main {
             ap.writePerformance();
 
         }
-
         ap.printAvgPerformance();
 
     }

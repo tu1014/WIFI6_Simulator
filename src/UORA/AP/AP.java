@@ -12,8 +12,8 @@ import java.util.List;
 
 public class AP {
 
-    public static int NUM_STATION = 100;
-    public static int NUM_TRANSMISSION = 100000;
+    public static int NUM_STATION = 1;
+    public static int NUM_TRANSMISSION = 1;
     public static int SIFS = 16; // 단위 us
     public static int DTI = 30; // 단위 us
     public static int NUM_RU = 6;
@@ -23,7 +23,8 @@ public class AP {
     public static int BA_SIZE = 32; // byte
     public static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     public static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
-    public static double TWT_INTERVAL = DTI + TF_TRANSMIT_TIME + (3*SIFS) + BA_TRANSMIT_TIME; // us
+    private static double PK_TRANSMIT_TIME = ((double)(PK_SIZE * 8))/((double)(DATA_RATE * 1000));
+    public static double TWT_INTERVAL = PK_TRANSMIT_TIME + TF_TRANSMIT_TIME + (2*SIFS) + BA_TRANSMIT_TIME; // us
 
     private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
@@ -72,7 +73,7 @@ public class AP {
 
         System.out.println();
         System.out.println();
-        System.out.println("TWT INTERVAL" + TWT_INTERVAL);
+        System.out.println("TWT INTERVAL : " + TWT_INTERVAL);
         System.out.println("******************************************************");
         System.out.println("NUM STA : " + NUM_STATION);
         System.out.println("NUM SIM : " + num_simulate);
@@ -123,7 +124,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createChannelAccessStation());
+            addStation(StationFactory.createDynamicChannelAccessStation());
     }
 
     public void removeStation(int amount) {

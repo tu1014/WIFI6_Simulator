@@ -6,7 +6,8 @@ import MORA.TestResult;
 
 public class Main {
 
-    private static int NUM_SIMULATION = 100;
+    private static int NUM_SIMULATION = 1;
+    private static int NUM_STATION = 1;
 
 
 
@@ -14,14 +15,13 @@ public class Main {
     public static void main(String[] args) {
 
         APInterface ap = APFactory.createStandardAP();
-        ap.setStationNum(100);
+        ap.setStationNum(NUM_STATION);
 
         for(int i=0; i<NUM_SIMULATION; i++) {
 
             ap.initStats();
-            // ap.run();
+            ap.run();
             ap.writeStats();
-
 
         }
 

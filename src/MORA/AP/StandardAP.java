@@ -1,5 +1,9 @@
 package MORA.AP;
 
+import MORA.AP.Frame.TriggerFrame;
+import MORA.AP.RU.RU;
+import MORA.AP.RU.VRU;
+import MORA.Station.StationFactory;
 import MORA.Station.StationInterface;
 
 import java.util.ArrayList;
@@ -12,33 +16,39 @@ public class StandardAP implements APInterface {
     private int transmitCount;
     private int successCount;
     private int idleVRUCount;
+    private int successVRUCount;
 
 
     // 테스트에 필요한 파라미터들
-    private static int NUM_STATION;
-    private static int NUM_TRANSMIT = 100000;
+    private static int NUM_STATION = 0;
+    private static int NUM_TRANSMIT = 1;
     private static int DATA_RATE = 1; // Gbps
-    private static int PK_SIZE = 1000; // byte
+    private static int PK_SIZE = 250; // byte
     private static int PREAMBLE_SIZE = 40; // byte
     private static int TF_SIZE = 89; // byte
     private static int BA_SIZE = 32; // byte
     private static int SIFS = 16; // us
     private static int DIFS = 18; // us
-    public static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
-    public static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
-    public static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));
-    public static double TWT_INTERVAL = NUM_TRANSMIT + TF_TRANSMIT_TIME + (2*SIFS) + BA_TRANSMIT_TIME; // us
+    private static int NUM_ANTENNA = 4;
+    private static int NUM_RU = 6;
+    private static int NUM_VRU = NUM_ANTENNA;
+    private static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
+    private static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
+    private static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));
+    private static double PK_TRANSMIT_TIME = ((double)(PK_SIZE * 8))/((double)(DATA_RATE * 1000));
+    private static double DTI = (PREAMBLE_TRANSMIT_TIME + PK_TRANSMIT_TIME) * NUM_VRU;
+    public static double TWT_INTERVAL = TF_TRANSMIT_TIME + (2*SIFS) + DTI + BA_TRANSMIT_TIME; // us
     // ocw min = 16, ocw max 1024
 
     private ArrayList<StationInterface> stations;
 
     public StandardAP() {
-        // this.stations = stations;
         initStats();
     }
 
     @Override
     public void initStats() {
+        stations = StationFactory.createStandardStations(NUM_STATION);
         transmitCount = 0;
         successCount = 0;
         idleVRUCount = 0;
@@ -46,9 +56,17 @@ public class StandardAP implements APInterface {
 
     @Override
     public void writeStats() {
+
+        System.out.println("TWT : " + TWT_INTERVAL);
+
         double successRate = ((double)successCount*(double)100)/(double)transmitCount;
-        double collisionRate = 1 - successRate;
-        double MBs = ((double)(successCount*PK_SIZE*8))/NUM_TRANSMIT*TWT_INTERVAL;
+        double collisionRate = 100 - successRate;
+        /////////////
+        /*System.out.println("successCount : " + successCount);
+        System.out.println("transmitCount : " + transmitCount);*/
+        /////////////
+        double mbps = ((double)(successVRUCount*PK_SIZE*8))/(NUM_TRANSMIT*TWT_INTERVAL);
+        double MBs = mbps/8;
 
         successRates.add(successRate);
         collisionRates.add(collisionRate);
@@ -63,16 +81,56 @@ public class StandardAP implements APInterface {
 
     @Override
     public void run() {
-
+        for(int i=0; i<NUM_TRANSMIT; i++) {
+            sendTF();
+        }
     }
 
     @Override
     public void sendTF() {
 
+        TriggerFrame tf = new TriggerFrame(NUM_RU, NUM_VRU);
+
+        for(StationInterface station : stations) {
+            station.receiveTF(tf);
+        }
+
+        sendBA(tf.ru);
     }
 
     @Override
-    public void sendBA() {
+    public void sendBA(RU ru) {
 
-    }
+        VRU[][] vrus = ru.ru;
+
+        System.out.println(ru);
+
+        for(int i=0; i<vrus.length; i++) {
+            for(int j=0; j<vrus[i].length; j++) {
+
+                VRU vru = vrus[i][j];
+
+                int count = vru.stationList.size();
+                transmitCount += count;
+
+                if(count == 0) idleVRUCount++;
+                else {
+                    for(StationInterface station : vru.stationList) {
+
+                        if(count == 1) {
+                            successCount++;
+                            successVRUCount += vrus[i].length - j;
+                            station.receiveBA(true);
+                        }
+
+                        else {
+                            station.receiveBA(false);
+                        }
+
+                    }
+                }
+            }
+        }
+
+    } // end of send BA
 }
