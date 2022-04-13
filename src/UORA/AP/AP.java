@@ -72,6 +72,7 @@ public class AP {
 
         System.out.println();
         System.out.println();
+        System.out.println("TWT INTERVAL" + TWT_INTERVAL);
         System.out.println("******************************************************");
         System.out.println("NUM STA : " + NUM_STATION);
         System.out.println("NUM SIM : " + num_simulate);
