@@ -8,5 +8,9 @@ public class APFactory {
         return new StandardAP();
     }
 
+    public static APInterface createCustomAP() {
+        return new CustomAP();
+    }
+
 
 }

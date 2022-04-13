@@ -8,7 +8,7 @@ public class Main {
 
         AP ap = new AP();
 
-        int num_simulation = 100;
+        int num_simulation = 50;
 
         for(int i=0; i<num_simulation; i++) {
 

@@ -16,7 +16,7 @@ public class AP {
     public static int NUM_TRANSMISSION = 1;
     public static int SIFS = 16; // 단위 us
     public static int DTI = 30; // 단위 us
-    public static int NUM_RU = 6;
+    public static int NUM_RU = 8;
     public static long PK_SIZE = 1000; // 단위 byte
     public static int TF_SIZE = 89; // 단위 byte
     public static int DATA_RATE = 1; // Gbps

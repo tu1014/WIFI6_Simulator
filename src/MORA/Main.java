@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        APInterface ap = APFactory.createStandardAP();
+        APInterface ap = APFactory.createCustomAP();
         ap.setStationNum(NUM_STATION);
 
         for(int i=0; i<NUM_SIMULATION; i++) {

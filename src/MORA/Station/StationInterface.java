@@ -8,7 +8,8 @@ public interface StationInterface {
     public void receiveTF(TriggerFrame triggerFrame);
     public void receiveBA(boolean result);
     public void allocateRU();
-    public void sendData(RU ru);
+    public void sendData(TriggerFrame triggerFrame);
+    public boolean isAvailable();
 
 
 }
