@@ -62,6 +62,7 @@ public class CustomStation implements StationInterface {
     }
 
     // bt 체크하고 idle vru로 바꾼다?
+    // isIdle의 row에 들어있는 Array>ist의 크기 안에서 랜덤 선택 -> 그 인덱스의 값 꺼내 그 값으로 바꾸기
     public boolean isCollision() {
         int i=0;
         for(; i<availableBT; i++) {
@@ -74,8 +75,12 @@ public class CustomStation implements StationInterface {
     @Override
     public void sendData(TriggerFrame triggerFrame) {
         if(isCollision()) {
-
-            System.out.println("충돌 감지 vru 변경이 필요합니다.");
+            int randomSize = bt.isIdle[allocatedRu].size(); // 자신의 ru에서 idle한 vru의 수
+            if (randomSize != 0) {
+                int randomIndex = random.nextInt(randomSize);
+                allocatedVru = bt.isIdle[allocatedRu].get(randomIndex);
+                // System.out.println("충돌 회피 시도");
+            }
         }
         // allocateRU();
         // System.out.println("allocatedRU : " + allocatedRu);

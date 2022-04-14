@@ -12,8 +12,8 @@ import java.util.List;
 
 public class AP {
 
-    public static int NUM_STATION = 1;
-    public static int NUM_TRANSMISSION = 1;
+    public static int NUM_STATION = 20;
+    public static int NUM_TRANSMISSION = 10000;
     public static int SIFS = 16; // 단위 us
     public static int DTI = 30; // 단위 us
     public static int NUM_RU = 8;
@@ -124,7 +124,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createDynamicChannelAccessStation());
+            addStation(StationFactory.createStandardStation());
     }
 
     public void removeStation(int amount) {

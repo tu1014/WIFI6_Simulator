@@ -45,7 +45,7 @@ public class StandardStation implements StationInterface {
         int b = obo.getInitialValue();
         allocatedRu = b % availableRu;
         // allocatedVru = (b - allocatedRu)/availableRu;
-        allocatedVru = b % availableVru;
+        allocatedVru = (b) % availableVru;
     }
 
     @Override

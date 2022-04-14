@@ -20,7 +20,7 @@ public class StandardAP implements APInterface {
 
     // 테스트에 필요한 파라미터들
     private static int NUM_STATION = 0;
-    private static int NUM_TRANSMIT = 10000;
+    private static int NUM_TRANSMIT = 30000;
     private static int DATA_RATE = 1; // Gbps
     private static int PK_SIZE = 1000; // byte
     private static int PREAMBLE_SIZE = 40; // byte
@@ -35,7 +35,8 @@ public class StandardAP implements APInterface {
     private static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));
     private static double PK_TRANSMIT_TIME = ((double)(PK_SIZE * 8))/((double)(DATA_RATE * 1000));
-    private static double DTI = (PREAMBLE_TRANSMIT_TIME * NUM_VRU) + PK_TRANSMIT_TIME;
+    // private static double DTI = (PREAMBLE_TRANSMIT_TIME * NUM_VRU) + PK_TRANSMIT_TIME;
+    private static double DTI = PREAMBLE_TRANSMIT_TIME + PK_TRANSMIT_TIME;
     public static double TWT_INTERVAL = TF_TRANSMIT_TIME + (2*SIFS) + DTI + BA_TRANSMIT_TIME; // us
     // ocw min = 16, ocw max 1024
 

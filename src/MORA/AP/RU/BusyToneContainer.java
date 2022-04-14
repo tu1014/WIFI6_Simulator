@@ -28,8 +28,8 @@ public class BusyToneContainer {
             for(int j=0; j<bt[i].length; j++) {
                 int num_bt = bt[i][j].vru.length;
                 for(int k=0; k<num_bt; k++) {
-                    if(bt[i][j].vru[k] != true) {
-                        isIdle[i].add(j);
+                    if(bt[i][j].vru[k] != true) { // 사용하지 않으면
+                        isIdle[i].add(j); // isIdle에 낭비된 VRU를 기록
                         count++;
                     }
                 }
