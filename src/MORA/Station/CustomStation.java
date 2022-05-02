@@ -53,7 +53,10 @@ public class CustomStation implements StationInterface {
         allocatedRu = b % availableRu;
         // allocatedVru = (b - allocatedRu)/availableRu;
         allocatedVru = b % availableVru;
-        allocatedBT = random.nextInt(availableBT);
+
+        if(availableBT != 0)
+            allocatedBT = random.nextInt(availableBT);
+        else allocatedBT = 0;
 
         // bt 전송?
         bt.bt[allocatedRu][allocatedVru].vru[allocatedBT] = true; // 사용한다 => true

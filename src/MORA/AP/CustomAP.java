@@ -20,7 +20,7 @@ public class CustomAP implements APInterface {
 
     // 테스트에 필요한 파라미터들
     private static int NUM_STATION = 0;
-    private static int NUM_TRANSMIT = 10000;
+    private static int NUM_TRANSMIT = 20000;
     private static int DATA_RATE = 1; // Gbps
     private static int PK_SIZE = 1000; // byte
     private static int PREAMBLE_SIZE = 40; // byte
