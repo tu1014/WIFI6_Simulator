@@ -20,7 +20,7 @@ public class CustomAP implements APInterface {
 
     // 테스트에 필요한 파라미터들
     private static int NUM_STATION = 0;
-    private static int NUM_TRANSMIT = 20000;
+    private static int NUM_TRANSMIT = 10000;
     private static int DATA_RATE = 1; // Gbps
     private static int PK_SIZE = 1000; // byte
     private static int PREAMBLE_SIZE = 40; // byte
@@ -32,7 +32,7 @@ public class CustomAP implements APInterface {
     private static int NUM_RU = 8;
     private static int NUM_VRU = NUM_ANTENNA;
     private static int BT_TIME = 3; // us
-    public static int NUM_BT = 3;
+    public static int NUM_BT = 2;
     private static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     private static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));
