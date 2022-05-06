@@ -32,7 +32,7 @@ public class CustomAP implements APInterface {
     private static int NUM_RU = 8;
     private static int NUM_VRU = NUM_ANTENNA;
     private static int BT_TIME = 3; // us
-    public static int NUM_BT = 2;
+    public static int NUM_BT = 3;
     private static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     private static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));

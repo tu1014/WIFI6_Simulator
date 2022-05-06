@@ -7,14 +7,14 @@ import MORA.TestResult;
 public class Main {
 
     private static int NUM_SIMULATION = 1;
-    private static int NUM_STATION = 100;
+    private static int NUM_STATION = 10;
 
 
 
 
     public static void main(String[] args) {
 
-        APInterface ap = APFactory.createCustomAP();
+        APInterface ap = APFactory.createStandardAP();
         ap.setStationNum(NUM_STATION);
 
         for(int i=0; i<NUM_SIMULATION; i++) {
