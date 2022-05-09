@@ -5,6 +5,10 @@ import UORA.Station.StationInterface;
 import UORA.resource.RARU;
 import UORA.resource.TriggerFrame;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +16,8 @@ import java.util.List;
 
 public class AP {
 
-    public static int NUM_STATION = 20;
-    public static int NUM_TRANSMISSION = 10000;
+    public static int NUM_STATION = 0;
+    public static int NUM_TRANSMISSION = 100000;
     public static int SIFS = 16; // 단위 us
     public static int DTI = 30; // 단위 us
     public static int NUM_RU = 8;
@@ -24,7 +28,7 @@ public class AP {
     public static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     public static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PK_TRANSMIT_TIME = ((double)(PK_SIZE * 8))/((double)(DATA_RATE * 1000));
-    public static double TWT_INTERVAL = PK_TRANSMIT_TIME + TF_TRANSMIT_TIME + (2*SIFS) + BA_TRANSMIT_TIME; // us
+    public static double TWT_INTERVAL = DTI + TF_TRANSMIT_TIME + (2*SIFS) + BA_TRANSMIT_TIME; // us
 
     private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
@@ -40,13 +44,35 @@ public class AP {
     public static ArrayList<Integer> totalTransmitList = new ArrayList<>();
     public static ArrayList<Integer> totalSuccessList = new ArrayList<>();
 
+    public static FileWriter fileWriter;
+
+    static {
+        try {
+            fileWriter = new FileWriter("testResult.txt", true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setNumStation(int numStation) {
+        NUM_STATION = numStation;
+    }
+
+
     public void initPerformanceStatus() {
         total_transmit = 0;
         collisionCount = 0;
         successCount = 0;
     }
 
-    public void printAvgPerformance() {
+    public void initStaticArray() {
+        MBsList = new ArrayList<>();
+        successRateList = new ArrayList<>();
+        totalTransmitList = new ArrayList<>();
+        totalSuccessList = new ArrayList<>();
+    }
+
+    public void printAvgPerformance() throws IOException {
 
         Double MBs = new Double(0);
         Double successRate = new Double(0);
@@ -84,6 +110,7 @@ public class AP {
         System.out.println();
 
         System.out.println("평균 Throughput : " + MBs + "MB/s");
+        fileWriter.write(MBs + ",");
         System.out.println("평균 성공률 : " + successRate);
         System.out.println("평균 충돌 발생률 : " + (100-successRate));
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
@@ -124,7 +151,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createStandardStation());
+            addStation(StationFactory.createDynamicChannelAccessStation());
     }
 
     public void removeStation(int amount) {
