@@ -42,6 +42,7 @@ public class DynamicChannelAccessStation implements StationInterface {
     public void receiveACK(boolean isSuccess) {
 
         if(isSuccess) {
+            // 원래 코드
             failCount = 0;
             obo.success();
         }

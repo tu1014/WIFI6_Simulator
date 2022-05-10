@@ -48,7 +48,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("testResult.txt", true);
+            fileWriter = new FileWriter("txCount.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -110,10 +110,11 @@ public class AP {
         System.out.println();
 
         System.out.println("평균 Throughput : " + MBs + "MB/s");
-        fileWriter.write(MBs + ",");
+        // fileWriter.write(MBs + ",");
         System.out.println("평균 성공률 : " + successRate);
         System.out.println("평균 충돌 발생률 : " + (100-successRate));
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
+        fileWriter.write(totalTransfer + ",");
 
         System.out.println();
         System.out.println();
