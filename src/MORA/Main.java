@@ -7,7 +7,7 @@ import MORA.TestResult;
 public class Main {
 
     private static int NUM_SIMULATION = 1;
-    private static int NUM_STATION = 10;
+    private static int NUM_STATION = 1;
 
 
 
