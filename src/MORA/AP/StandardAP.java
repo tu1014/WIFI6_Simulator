@@ -16,6 +16,9 @@ public class StandardAP implements APInterface {
     private int transmitCount;
     private int successCount;
     private int idleVRUCount;
+    private int usedVRUCount;
+
+    private double idleRate;
 
 
     // 테스트에 필요한 파라미터들
@@ -52,6 +55,7 @@ public class StandardAP implements APInterface {
         transmitCount = 0;
         successCount = 0;
         idleVRUCount = 0;
+        idleRate = 0;
     }
 
     @Override
@@ -71,7 +75,7 @@ public class StandardAP implements APInterface {
         successRates.add(successRate);
         collisionRates.add(collisionRate);
         throughputs.add(MBs);
-        idleCounts.add(idleVRUCount);
+        idleRates.add(idleRate);
     }
 
     @Override
@@ -114,8 +118,10 @@ public class StandardAP implements APInterface {
         // System.out.println(ru);
 
         for(int i=0; i<vrus.length; i++) {
-            boolean isIdle = true;
+
             for(int j=0; j<vrus[i].length; j++) {
+
+                boolean isIdle = true;
 
                 VRU vru = vrus[i][j];
 
@@ -138,9 +144,20 @@ public class StandardAP implements APInterface {
 
                     }
                 }
+                if(isIdle) idleVRUCount++;
+                else usedVRUCount++;
             }
-            if(isIdle) idleVRUCount++;
+
         }
+
+        int cc = idleVRUCount + usedVRUCount;
+        idleVRUCount = 0;
+        usedVRUCount = 0;
+        // int num = NUM_RU * NUM_VRU;
+        // idleRate = (double)idleVRUCount / (double) num * 100;
+//        System.out.println("Total VRU : " + num);
+//        System.out.println("IdleVRUCount : " + idleVRUCount);
+//        System.out.println("IdleRate : " + idleRate);
 
     } // end of send BA
 }

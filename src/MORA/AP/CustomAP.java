@@ -6,6 +6,8 @@ import MORA.AP.RU.VRU;
 import MORA.Station.StationFactory;
 import MORA.Station.StationInterface;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static MORA.TestResult.*;
@@ -16,6 +18,8 @@ public class CustomAP implements APInterface {
     private int transmitCount;
     private int successCount;
     private int idleVRUCount;
+
+    private double idleRate;
 
 
     // 테스트에 필요한 파라미터들
@@ -32,7 +36,7 @@ public class CustomAP implements APInterface {
     private static int NUM_RU = 8;
     private static int NUM_VRU = NUM_ANTENNA;
     private static int BT_TIME = 3; // us
-    public static int NUM_BT = 3;
+    public static int NUM_BT = 2;
     private static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     private static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PREAMBLE_TRANSMIT_TIME = ((double)(PREAMBLE_SIZE * 8))/((double)(DATA_RATE * 1000));
@@ -44,6 +48,8 @@ public class CustomAP implements APInterface {
 
     private ArrayList<StationInterface> stations;
 
+
+
     public CustomAP() {
         initStats();
     }
@@ -54,6 +60,7 @@ public class CustomAP implements APInterface {
         transmitCount = 0;
         successCount = 0;
         idleVRUCount = 0;
+        idleRate = 0;
     }
 
     @Override
@@ -73,7 +80,7 @@ public class CustomAP implements APInterface {
         successRates.add(successRate);
         collisionRates.add(collisionRate);
         throughputs.add(MBs);
-        idleCounts.add(idleVRUCount);
+        idleRates.add(idleRate);
     }
 
     @Override
@@ -117,8 +124,10 @@ public class CustomAP implements APInterface {
         // System.out.println(ru);
 
         for(int i=0; i<vrus.length; i++) {
-            boolean isIdle = true;
+
             for(int j=0; j<vrus[i].length; j++) {
+
+                boolean isIdle = true;
 
                 VRU vru = vrus[i][j];
 
@@ -141,9 +150,14 @@ public class CustomAP implements APInterface {
 
                     }
                 }
+                if(isIdle) idleVRUCount++;
             }
-            if(isIdle) idleVRUCount++;
+
         }
+        int num = NUM_RU * NUM_VRU;
+        double tmp = (double)idleVRUCount / (double) num * 100;
+        idleRate = 0.3 * idleRate + 0.7 * tmp;
+        idleVRUCount = 0;
 
     } // end of send BA
 }

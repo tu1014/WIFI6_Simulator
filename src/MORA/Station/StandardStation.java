@@ -31,7 +31,7 @@ public class StandardStation implements StationInterface {
         availableRu = triggerFrame.num_ru;
         availableVru = triggerFrame.num_vru;
 
-        // if(obo.isAvailable()) sendData(triggerFrame);
+        if(obo.isAvailable()) allocateRU();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class StandardStation implements StationInterface {
 
     @Override
     public void sendData(TriggerFrame triggerFrame) {
-        allocateRU();
+
         // System.out.println("allocatedRU : " + allocatedRu);
         // System.out.println("allocatedVRU : " + allocatedVru);
         triggerFrame.ru.ru[allocatedRu][allocatedVru].use(this);
