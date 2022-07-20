@@ -44,11 +44,13 @@ public class AP {
     public static ArrayList<Integer> totalTransmitList = new ArrayList<>();
     public static ArrayList<Integer> totalSuccessList = new ArrayList<>();
 
+    public static ArrayList<Double> alphaList = new ArrayList<>();
+
     public static FileWriter fileWriter;
 
     static {
         try {
-            fileWriter = new FileWriter("txCount.txt", true);
+            fileWriter = new FileWriter("20220720.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,6 +72,7 @@ public class AP {
         successRateList = new ArrayList<>();
         totalTransmitList = new ArrayList<>();
         totalSuccessList = new ArrayList<>();
+        alphaList = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
@@ -78,6 +81,7 @@ public class AP {
         Double successRate = new Double(0);
         Double totalTransfer = new Double(0);
         Double successCount = new Double(0);
+        Double alpha = new Double(0);
 
         int num_simulate = MBsList.size();
 
@@ -87,6 +91,7 @@ public class AP {
             successRate += successRateList.get(i);
             totalTransfer += totalTransmitList.get(i);
             successCount += totalSuccessList.get(i);
+            alpha += alphaList.get(i);
 
         }
 
@@ -96,6 +101,7 @@ public class AP {
         successRate /= count;
         totalTransfer /= count;
         successCount /= count;
+        alpha /= count;
 
         System.out.println();
         System.out.println();
@@ -114,7 +120,8 @@ public class AP {
         System.out.println("평균 성공률 : " + successRate);
         System.out.println("평균 충돌 발생률 : " + (100-successRate));
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
-        fileWriter.write(totalTransfer + ",");
+        System.out.println("평균 알파 : " + alpha);
+        // fileWriter.write(totalTransfer + ",");
 
         System.out.println();
         System.out.println();
@@ -138,6 +145,13 @@ public class AP {
         double collisionRate = ((double)collisionCount/(double)total_transmit)*(double)100;
         double successRate = ((double)successCount/(double)total_transmit)*(double)100;
         successRateList.add(successRate);
+
+        double result = 0;
+        for(StationInterface station : stations) {
+            result += station.getAlpha();
+        }
+        result /= stations.size();
+        alphaList.add(result);
 
     }
 

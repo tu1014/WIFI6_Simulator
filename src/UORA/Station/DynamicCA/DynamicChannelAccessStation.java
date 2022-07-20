@@ -62,4 +62,9 @@ public class DynamicChannelAccessStation implements StationInterface {
 
     }
 
+    @Override
+    public double getAlpha() {
+        return obo.getAlpha();
+    }
+
 }

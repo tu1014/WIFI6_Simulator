@@ -8,4 +8,6 @@ public interface StationInterface {
     public void receiveACK(boolean isSuccess);
     public void send(TriggerFrame tf);
 
+    double getAlpha();
+
 }

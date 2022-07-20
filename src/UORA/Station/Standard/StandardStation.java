@@ -59,6 +59,11 @@ public class StandardStation implements StationInterface {
 
     }
 
+    @Override
+    public double getAlpha() {
+        return obo.getAlpha();
+    }
+
 
     @Override
     public String toString() {

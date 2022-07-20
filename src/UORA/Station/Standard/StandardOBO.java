@@ -50,6 +50,11 @@ public class StandardOBO implements OBOInterface {
     }
 
     @Override
+    public double getAlpha() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "" + obo;
     }

@@ -50,4 +50,9 @@ public class ChannelAccessOBO implements OBOInterface {
         if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }
+
+    @Override
+    public double getAlpha() {
+        return a;
+    }
 }

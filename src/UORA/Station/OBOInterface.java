@@ -8,4 +8,6 @@ public interface OBOInterface {
     public void success();
     public void fail();
 
+    double getAlpha();
+
 }
