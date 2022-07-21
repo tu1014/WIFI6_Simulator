@@ -46,11 +46,13 @@ public class AP {
 
     public static ArrayList<Double> alphaList = new ArrayList<>();
 
+    public static ArrayList<Double> failCountList = new ArrayList<>();
+
     public static FileWriter fileWriter;
 
     static {
         try {
-            fileWriter = new FileWriter("20220720.txt", true);
+            fileWriter = new FileWriter("min.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,6 +75,7 @@ public class AP {
         totalTransmitList = new ArrayList<>();
         totalSuccessList = new ArrayList<>();
         alphaList = new ArrayList<>();
+        failCountList = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
@@ -82,6 +85,7 @@ public class AP {
         Double totalTransfer = new Double(0);
         Double successCount = new Double(0);
         Double alpha = new Double(0);
+        Double failCount = new Double(0);
 
         int num_simulate = MBsList.size();
 
@@ -92,6 +96,7 @@ public class AP {
             totalTransfer += totalTransmitList.get(i);
             successCount += totalSuccessList.get(i);
             alpha += alphaList.get(i);
+            failCount += failCountList.get(i);
 
         }
 
@@ -102,6 +107,7 @@ public class AP {
         totalTransfer /= count;
         successCount /= count;
         alpha /= count;
+        failCount /= count;
 
         System.out.println();
         System.out.println();
@@ -121,7 +127,15 @@ public class AP {
         System.out.println("평균 충돌 발생률 : " + (100-successRate));
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
         System.out.println("평균 알파 : " + alpha);
+        System.out.println("평균 재전송 횟수 : " + failCount);
         // fileWriter.write(totalTransfer + ",");
+
+        fileWriter.write(stations.size() + ",");
+        fileWriter.write(MBs + ",");
+        fileWriter.write(successRate + ",");
+        fileWriter.write(totalTransfer + ",");
+        fileWriter.write(alpha + ",");
+        fileWriter.write(failCount + "\n");
 
         System.out.println();
         System.out.println();
@@ -152,6 +166,13 @@ public class AP {
         }
         result /= stations.size();
         alphaList.add(result);
+
+        double d = 0;
+        for(StationInterface station : stations) {
+            d += station.getFailCount();
+        }
+        d /= stations.size();
+        failCountList.add(d);
 
     }
 

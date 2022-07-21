@@ -12,7 +12,8 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     private double a = 1; // 알파
     private double newResultRate = 0.125; // 가중치
 
-    private static double A_MIN = 0.1;
+    private static double A_MIN = 0.01;
+    // private static double A_MIN = 0.1;
     private static double A_MAX = 10;
 
     private static double ocwMin = 8;

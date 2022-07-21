@@ -17,6 +17,10 @@ public class StandardStation implements StationInterface {
     private int id;
     private OBOInterface obo;
 
+    private int failCount = 0;
+    private double prevFailCount = 0;
+    private int count = 0;
+
     public StandardStation(OBOInterface obo) {
         id = idCounter++;
         this.obo = obo;
@@ -45,8 +49,19 @@ public class StandardStation implements StationInterface {
 
         // System.out.println(id + "번 STA 전송 성공 여부 : " + isSuccess);
 
-        if(isSuccess) obo.success();
-        else obo.fail();
+        if(isSuccess) {
+
+            count++;
+            prevFailCount = (count-1)/count*prevFailCount + failCount/count;
+
+            failCount = 0;
+
+            obo.success();
+        }
+        else {
+            failCount++;
+            obo.fail();
+        }
 
     }
 
@@ -62,6 +77,11 @@ public class StandardStation implements StationInterface {
     @Override
     public double getAlpha() {
         return obo.getAlpha();
+    }
+
+    @Override
+    public double getFailCount() {
+        return prevFailCount;
     }
 
 

@@ -17,6 +17,8 @@ public class DynamicChannelAccessStation implements StationInterface {
     // 네트워크 상태를 파악하기 위한 변수
     // 전송에 성공하면 초기화
     private int failCount = 0;
+    private double prevFailCount = 0;
+    private int count = 0;
 
     public DynamicChannelAccessStation(OBOInterface obo) {
         this.obo = obo;
@@ -43,6 +45,9 @@ public class DynamicChannelAccessStation implements StationInterface {
 
         if(isSuccess) {
             // 원래 코드
+            count++;
+            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)failCount/count;
+
             failCount = 0;
             obo.success();
         }
@@ -65,6 +70,11 @@ public class DynamicChannelAccessStation implements StationInterface {
     @Override
     public double getAlpha() {
         return obo.getAlpha();
+    }
+
+    @Override
+    public double getFailCount() {
+        return prevFailCount;
     }
 
 }

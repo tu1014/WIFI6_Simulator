@@ -9,5 +9,6 @@ public interface StationInterface {
     public void send(TriggerFrame tf);
 
     double getAlpha();
+    double getFailCount();
 
 }
