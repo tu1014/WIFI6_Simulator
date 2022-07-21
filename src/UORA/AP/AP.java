@@ -52,7 +52,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("min.txt", true);
+            fileWriter = new FileWriter("min0.05.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
