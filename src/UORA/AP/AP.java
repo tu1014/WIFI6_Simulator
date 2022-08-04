@@ -48,11 +48,13 @@ public class AP {
 
     public static ArrayList<Double> failCountList = new ArrayList<>();
 
+    public static ArrayList<Integer> txTryCount = new ArrayList<>();
+
     public static FileWriter fileWriter;
 
     static {
         try {
-            fileWriter = new FileWriter("min0.05.txt", true);
+            fileWriter = new FileWriter("standardUORA.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -76,6 +78,7 @@ public class AP {
         totalSuccessList = new ArrayList<>();
         alphaList = new ArrayList<>();
         failCountList = new ArrayList<>();
+        txTryCount = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
@@ -86,6 +89,7 @@ public class AP {
         Double successCount = new Double(0);
         Double alpha = new Double(0);
         Double failCount = new Double(0);
+        Double txTry = new Double(0);
 
         int num_simulate = MBsList.size();
 
@@ -97,7 +101,7 @@ public class AP {
             successCount += totalSuccessList.get(i);
             alpha += alphaList.get(i);
             failCount += failCountList.get(i);
-
+            txTry += txTryCount.get(i);
         }
 
         Double count = new Double(num_simulate);
@@ -108,6 +112,7 @@ public class AP {
         successCount /= count;
         alpha /= count;
         failCount /= count;
+        txTry /= count;
 
         System.out.println();
         System.out.println();
@@ -128,6 +133,7 @@ public class AP {
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
         System.out.println("평균 알파 : " + alpha);
         System.out.println("평균 재전송 횟수 : " + failCount);
+        System.out.println("TF당 전송 시도 횟수 : " + txTry);
         // fileWriter.write(totalTransfer + ",");
 
         fileWriter.write(stations.size() + ",");
@@ -135,7 +141,8 @@ public class AP {
         fileWriter.write(successRate + ",");
         fileWriter.write(totalTransfer + ",");
         fileWriter.write(alpha + ",");
-        fileWriter.write(failCount + "\n");
+        fileWriter.write(failCount + ",");
+        fileWriter.write(txTry + "\n");
 
         System.out.println();
         System.out.println();
@@ -187,7 +194,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createDynamicChannelAccessStation());
+            addStation(StationFactory.createStandardStation());
     }
 
     public void removeStation(int amount) {
@@ -280,6 +287,8 @@ public class AP {
 
         List<RARU> ruList = triggerFrame.getRuList();
 
+        int i = 0;
+
         for(RARU ru : ruList) {
 
             List<StationInterface> stationList = ru.getStations();
@@ -289,6 +298,7 @@ public class AP {
             if(num_station == 0) continue;
 
             total_transmit += num_station;
+            i += num_station;
 
             for(StationInterface station : stationList) {
 
@@ -302,6 +312,8 @@ public class AP {
                 station.receiveACK(isSuccess);
             }
         }
+
+        txTryCount.add(i);
 
     }
 

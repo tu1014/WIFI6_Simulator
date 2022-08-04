@@ -4,7 +4,7 @@ import UORA.Station.OBOInterface;
 
 import java.util.Random;
 
-public class DynamicChannelAccessOBO implements OBOInterface {
+public class TestOBO implements OBOInterface {
 
     private double obo;
     private double ocw;
@@ -36,16 +36,16 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     }
 
     public void calAlpha(double networkStatus) {
-        double tmp;
+        double tmp = networkStatus;
 
-        if(networkStatus >= 1) {
-            tmp = ((double)1) + (networkStatus * ocwMin / ocwMax);
-        } else {
-            tmp = ((double)1) - (ocwMin/ocwMax/networkStatus);
-        }
+//        if(networkStatus >= 1) {
+//            tmp = ((double)1) + (networkStatus * ocwMin / ocwMax);
+//        } else {
+//            tmp = ((double)1) - (ocwMin/ocwMax/networkStatus);
+//        }
 
-        if(tmp < A_MIN) tmp = A_MIN;
-        if(tmp > A_MAX) tmp = A_MAX;
+        /*if(tmp < A_MIN) tmp = A_MIN;
+        if(tmp > A_MAX) tmp = A_MAX;*/
 
         a = (((double)1) - newResultRate)*a + newResultRate*tmp;
 

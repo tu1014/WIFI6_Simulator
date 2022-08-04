@@ -52,7 +52,7 @@ public class StandardStation implements StationInterface {
         if(isSuccess) {
 
             count++;
-            prevFailCount = (count-1)/count*prevFailCount + failCount/count;
+            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)failCount/count;
 
             failCount = 0;
 

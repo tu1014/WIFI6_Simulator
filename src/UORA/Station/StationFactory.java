@@ -3,6 +3,7 @@ package UORA.Station;
 import UORA.Station.CA.ChannelAccessOBO;
 import UORA.Station.DynamicCA.DynamicChannelAccessOBO;
 import UORA.Station.DynamicCA.DynamicChannelAccessStation;
+import UORA.Station.DynamicCA.TestOBO;
 import UORA.Station.Standard.StandardOBO;
 import UORA.Station.Standard.StandardStation;
 
@@ -18,6 +19,10 @@ public class StationFactory {
 
     public static StationInterface createChannelAccessStation() {
         return new StandardStation(new ChannelAccessOBO());
+    }
+
+    public static StationInterface createTestStation() {
+        return new DynamicChannelAccessStation(new TestOBO());
     }
 
 
