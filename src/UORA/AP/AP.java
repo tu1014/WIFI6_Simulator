@@ -54,7 +54,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("standardUORA.txt", true);
+            fileWriter = new FileWriter("testobowithstandard.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -194,7 +194,7 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++)
-            addStation(StationFactory.createStandardStation());
+            addStation(StationFactory.createTestStation());
     }
 
     public void removeStation(int amount) {

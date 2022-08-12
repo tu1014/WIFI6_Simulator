@@ -20,6 +20,11 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     private static double ocwMax = 64;
     private static Random random = new Random();
 
+    public DynamicChannelAccessOBO() {
+        ocw = ocwMin;
+        initOBO();
+    }
+
 
     @Override
     public void minus(double... params) {

@@ -20,6 +20,11 @@ public class TestOBO implements OBOInterface {
     private static double ocwMax = 64;
     private static Random random = new Random();
 
+    public TestOBO() {
+        ocw = ocwMin;
+        initOBO();
+    }
+
 
     @Override
     public void minus(double... params) {
@@ -63,14 +68,16 @@ public class TestOBO implements OBOInterface {
 
     @Override
     public void success() {
-        ocw = ocw/2;
+        // ocw = ocw/2;
+        ocw = ocwMin;
         if(ocw < ocwMin) ocw = ocwMin;
         initOBO();
     }
 
     @Override
     public void fail() {
-        ocw = ocw + ocwMin/2;
+        // ocw = ocw + ocwMin/2;
+        ocw = ocw * 2;
         if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }
