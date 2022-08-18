@@ -27,12 +27,14 @@ public class DynamicChannelAccessStation implements StationInterface {
     @Override
     public void receiveTF(TriggerFrame tf) {
 
+        obo.setStationNum(tf.getThe_number_of_sta());
+
         // obo 감소
         obo.minus(
                 tf.getTheNumberOfRARU(),
                 tf.getThe_number_of_sta(),
                 failCount
-                );
+        );
 
         // 전송 가능하다면 전송
         if(obo.isAvailable()) {
@@ -75,6 +77,11 @@ public class DynamicChannelAccessStation implements StationInterface {
     @Override
     public double getFailCount() {
         return prevFailCount;
+    }
+
+    @Override
+    public double getAvgOCW() {
+        return obo.getAvgOCW();
     }
 
 }

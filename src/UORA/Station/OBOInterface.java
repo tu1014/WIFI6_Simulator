@@ -8,6 +8,10 @@ public interface OBOInterface {
     public void success();
     public void fail();
 
+    public void setStationNum(int stationNum);
+
     double getAlpha();
+
+    double getAvgOCW();
 
 }

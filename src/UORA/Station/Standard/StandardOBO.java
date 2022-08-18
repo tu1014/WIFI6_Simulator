@@ -50,7 +50,17 @@ public class StandardOBO implements OBOInterface {
     }
 
     @Override
+    public void setStationNum(int stationNum) {
+        this.ocw = (int)ocw;
+    }
+
+    @Override
     public double getAlpha() {
+        return 0;
+    }
+
+    @Override
+    public double getAvgOCW() {
         return 0;
     }
 

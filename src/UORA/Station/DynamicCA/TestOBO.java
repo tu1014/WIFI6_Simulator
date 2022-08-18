@@ -20,8 +20,13 @@ public class TestOBO implements OBOInterface {
     private static double ocwMax = 64;
     private static Random random = new Random();
 
+    private double prevOCW = 0;
+    private int count = 0;
+
+    private int stationNum;
+
     public TestOBO() {
-        ocw = ocwMin;
+        ocw = 16;
         initOBO();
     }
 
@@ -68,22 +73,43 @@ public class TestOBO implements OBOInterface {
 
     @Override
     public void success() {
-        // ocw = ocw/2;
-        ocw = ocwMin;
+        ocw = ocw/2;
+        // ocw = ocwMin;
+        // ocw = stationNum;
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
+        // ocw = 16;
         if(ocw < ocwMin) ocw = ocwMin;
         initOBO();
     }
 
     @Override
     public void fail() {
-        // ocw = ocw + ocwMin/2;
-        ocw = ocw * 2;
+        ocw = ocw + ocwMin/2;
+        // ocw = ocw * 2;
+        // ocw = stationNum;
+        // ocw= 16;
+
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
         if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }
 
     @Override
+    public void setStationNum(int stationNum) {
+        this.stationNum = stationNum;
+    }
+
+    @Override
     public double getAlpha() {
         return a;
+    }
+
+    @Override
+    public double getAvgOCW() {
+        return prevOCW;
     }
 }

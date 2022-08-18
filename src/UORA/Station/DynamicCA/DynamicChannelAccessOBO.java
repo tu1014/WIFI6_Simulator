@@ -81,7 +81,17 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     }
 
     @Override
+    public void setStationNum(int stationNum) {
+
+    }
+
+    @Override
     public double getAlpha() {
         return a;
+    }
+
+    @Override
+    public double getAvgOCW() {
+        return 0;
     }
 }

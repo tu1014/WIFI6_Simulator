@@ -50,11 +50,13 @@ public class AP {
 
     public static ArrayList<Integer> txTryCount = new ArrayList<>();
 
+    public static ArrayList<Double> avgOCW = new ArrayList<>();
+
     public static FileWriter fileWriter;
 
     static {
         try {
-            fileWriter = new FileWriter("testobowithstandard.txt", true);
+            fileWriter = new FileWriter("testobonorange.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,6 +81,7 @@ public class AP {
         alphaList = new ArrayList<>();
         failCountList = new ArrayList<>();
         txTryCount = new ArrayList<>();
+        avgOCW = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
@@ -90,6 +93,7 @@ public class AP {
         Double alpha = new Double(0);
         Double failCount = new Double(0);
         Double txTry = new Double(0);
+        Double avg_ocw = new Double(0);
 
         int num_simulate = MBsList.size();
 
@@ -102,6 +106,7 @@ public class AP {
             alpha += alphaList.get(i);
             failCount += failCountList.get(i);
             txTry += txTryCount.get(i);
+            avg_ocw += avgOCW.get(i);
         }
 
         Double count = new Double(num_simulate);
@@ -113,6 +118,7 @@ public class AP {
         alpha /= count;
         failCount /= count;
         txTry /= count;
+        avg_ocw /= count;
 
         System.out.println();
         System.out.println();
@@ -134,6 +140,7 @@ public class AP {
         System.out.println("평균 알파 : " + alpha);
         System.out.println("평균 재전송 횟수 : " + failCount);
         System.out.println("TF당 전송 시도 횟수 : " + txTry);
+        System.out.println("평균 OCW : " + avg_ocw);
         // fileWriter.write(totalTransfer + ",");
 
         fileWriter.write(stations.size() + ",");
@@ -142,7 +149,8 @@ public class AP {
         fileWriter.write(totalTransfer + ",");
         fileWriter.write(alpha + ",");
         fileWriter.write(failCount + ",");
-        fileWriter.write(txTry + "\n");
+        fileWriter.write(txTry + ",");
+        fileWriter.write(avg_ocw + "\n");
 
         System.out.println();
         System.out.println();
@@ -175,10 +183,14 @@ public class AP {
         alphaList.add(result);
 
         double d = 0;
+        double avg = 0;
         for(StationInterface station : stations) {
             d += station.getFailCount();
+            avg += station.getAvgOCW();
         }
         d /= stations.size();
+        avg /= stations.size();
+        avgOCW.add(avg);
         failCountList.add(d);
 
     }

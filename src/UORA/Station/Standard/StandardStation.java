@@ -84,6 +84,11 @@ public class StandardStation implements StationInterface {
         return prevFailCount;
     }
 
+    @Override
+    public double getAvgOCW() {
+        return obo.getAvgOCW();
+    }
+
 
     @Override
     public String toString() {

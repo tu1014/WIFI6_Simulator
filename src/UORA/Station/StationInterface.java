@@ -11,4 +11,6 @@ public interface StationInterface {
     double getAlpha();
     double getFailCount();
 
+    double getAvgOCW();
+
 }
