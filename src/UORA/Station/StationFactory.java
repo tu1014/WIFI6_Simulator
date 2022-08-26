@@ -22,7 +22,7 @@ public class StationFactory {
     }
 
     public static StationInterface createTestStation() {
-        return new DynamicChannelAccessStation(new TestOBO());
+        return new DynamicChannelAccessStation(new TestOBO(8));
     }
 
 

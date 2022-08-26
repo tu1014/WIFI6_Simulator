@@ -20,7 +20,7 @@ public class AP {
     public static int NUM_TRANSMISSION = 100000;
     public static int SIFS = 16; // 단위 us
     public static int DTI = 30; // 단위 us
-    public static int NUM_RU = 8;
+    public static int NUM_RU = 12;
     public static long PK_SIZE = 1000; // 단위 byte
     public static int TF_SIZE = 89; // 단위 byte
     public static int DATA_RATE = 1; // Gbps
@@ -56,7 +56,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("testobonorange.txt", true);
+            fileWriter = new FileWriter("final_ru12.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
