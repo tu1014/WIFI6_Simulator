@@ -20,6 +20,9 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     private static double ocwMax = 64;
     private static Random random = new Random();
 
+    private double prevOCW = 0;
+    private int count = 0;
+
     public DynamicChannelAccessOBO() {
         ocw = ocwMin;
         initOBO();
@@ -41,16 +44,16 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     }
 
     public void calAlpha(double networkStatus) {
-        double tmp;
+        double tmp = networkStatus;
 
-        if(networkStatus >= 1) {
+        /*if(networkStatus >= 1) {
             tmp = ((double)1) + (networkStatus * ocwMin / ocwMax);
         } else {
             tmp = ((double)1) - (ocwMin/ocwMax/networkStatus);
         }
 
         if(tmp < A_MIN) tmp = A_MIN;
-        if(tmp > A_MAX) tmp = A_MAX;
+        if(tmp > A_MAX) tmp = A_MAX;*/
 
         a = (((double)1) - newResultRate)*a + newResultRate*tmp;
 
@@ -70,6 +73,10 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     public void success() {
         ocw = ocw/2;
         if(ocw < ocwMin) ocw = ocwMin;
+
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
         initOBO();
     }
 
@@ -77,6 +84,10 @@ public class DynamicChannelAccessOBO implements OBOInterface {
     public void fail() {
         ocw = ocw + ocwMin/2;
         if(ocw > ocwMax) ocw = ocwMax;
+
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
         initOBO();
     }
 
@@ -92,6 +103,6 @@ public class DynamicChannelAccessOBO implements OBOInterface {
 
     @Override
     public double getAvgOCW() {
-        return 0;
+        return prevOCW;
     }
 }
