@@ -54,6 +54,9 @@ public class TestOBO implements OBOInterface {
         calAlpha(networkStatus);
         obo -= a*num_raru;
 
+        ocwMin = num_raru;
+        ocwMax = ocwMin * 8;
+
         /*ocwMax = num_raru + 6;
         ocwMin = num_raru;*/
 
@@ -98,17 +101,24 @@ public class TestOBO implements OBOInterface {
             if(ocw < ocwMin) ocw = ocwMin;
         }*/
 
+        if(a >= 1) {
+            ocw = ocwMin;
+        }
 
-        // ocw = ocw/2;
-        ocw = ocwMin + (2*failCount);
+        else {
 
-        failCount = 0;
+            // ocw = ocw/2;
+            ocw = ocwMin + (failCount) + (1-a);
+            failCount = 0;
+
+            // ocw = 10;
+            // if(ocw < ocwMin) ocw = ocwMin;
+
+        }
 
         count++;
         prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
 
-        // ocw = 10;
-        // if(ocw < ocwMin) ocw = ocwMin;
         initOBO();
     }
 
@@ -134,13 +144,21 @@ public class TestOBO implements OBOInterface {
         }*/
 
         failCount++;
-        ocw = ocw + ocwMin/2;
-        if(ocw > ocwMax) ocw = ocwMax;
+
+        if(a >= 1) {
+            ocw = ocwMin;
+        }
+
+        else {
+
+            ocw = ocw + (ocwMin + (failCount) + (1-a))/2;
+            if(ocw > ocwMax) ocw = ocwMax;
+
+            // if(ocw > ocwMax) ocw = ocwMax;
+        }
 
         count++;
         prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
-
-        // if(ocw > ocwMax) ocw = ocwMax;
         initOBO();
     }
 

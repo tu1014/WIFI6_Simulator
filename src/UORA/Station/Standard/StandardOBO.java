@@ -12,6 +12,11 @@ public class StandardOBO implements OBOInterface {
     private static int ocwMax = 64;
     private static Random random = new Random();
 
+    private double a = 1; // 알파
+
+    private double prevOCW = 0;
+    private int count = 0;
+
 
     private int ocw;
 
@@ -39,6 +44,10 @@ public class StandardOBO implements OBOInterface {
     @Override
     public void success() {
         ocw = ocwMin;
+
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
         initOBO();
     }
 
@@ -46,6 +55,10 @@ public class StandardOBO implements OBOInterface {
     public void fail() {
         ocw = 2*ocw + 1;
         if(ocw > ocwMax) ocw = ocwMax;
+
+        count++;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+
         initOBO();
     }
 
@@ -56,12 +69,12 @@ public class StandardOBO implements OBOInterface {
 
     @Override
     public double getAlpha() {
-        return 0;
+        return a;
     }
 
     @Override
     public double getAvgOCW() {
-        return 0;
+        return prevOCW;
     }
 
     @Override
