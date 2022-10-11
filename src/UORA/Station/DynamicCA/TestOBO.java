@@ -23,7 +23,7 @@ public class TestOBO implements OBOInterface {
     private double prevOCW = 0;
     private int count = 0;
 
-    double failCount = 0;
+    // double failCount = 0;
 
     private int stationNum;
 
@@ -87,9 +87,6 @@ public class TestOBO implements OBOInterface {
         ocw = ocw/2;
         if(ocw < ocwMin) ocw = ocwMin;
 
-        failCount = 0;
-
-
         count++;
         prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
 
@@ -102,8 +99,6 @@ public class TestOBO implements OBOInterface {
         // ocw = ocw * 2;
         // ocw = stationNum;
         // ocw= 10;
-
-        failCount++;
 
         // ocw = ocw + (1/a)/2;
         ocw = ocw + ocwMin/2;
