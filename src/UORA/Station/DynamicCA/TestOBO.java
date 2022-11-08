@@ -20,19 +20,14 @@ public class TestOBO implements OBOInterface {
     private static double ocwMax = 64;
     private static Random random = new Random();
 
-    private double prevOCW = 0;
-    private int count = 0;
+    private double prevOCW = 0; // 성능 측정을 위한 값
+    private int count = 0; // OCW 평균 필터에 사용
 
-    // double failCount = 0;
+    private double failCount = 0;
+
 
     private int stationNum;
 
-    public TestOBO() {
-        ocw = 10;
-        initOBO();
-
-
-    }
 
     public TestOBO(int ocw) {
         this.ocw = ocw;
@@ -47,12 +42,14 @@ public class TestOBO implements OBOInterface {
         double num_station = params[1];
         double num_fail = params[2];
 
+        failCount = num_fail;
+
         //////
         if(num_station <= num_raru) num_station = 1;
         else num_station -= num_raru;
         //////
 
-        double networkStatus = num_raru/(num_station);
+        double networkStatus = num_raru/(num_station+num_fail);
 
         calAlpha(networkStatus);
         obo -= a*num_raru;
@@ -82,9 +79,9 @@ public class TestOBO implements OBOInterface {
     @Override
     public void success() {
 
-        // ocw = ocwMin + (1/a)/2;
-
-        ocw = ocw/2;
+        ocw = ocwMin + failCount;
+        // ocw = ocwMin + 2*failCount;
+        // ocw = ocw/2;
         if(ocw < ocwMin) ocw = ocwMin;
 
         count++;
@@ -95,13 +92,10 @@ public class TestOBO implements OBOInterface {
 
     @Override
     public void fail() {
-        // ocw = ocw + ocwMin/2;
-        // ocw = ocw * 2;
-        // ocw = stationNum;
-        // ocw= 10;
 
-        // ocw = ocw + (1/a)/2;
-        ocw = ocw + ocwMin/2;
+        ocw = ocw + (ocwMin + failCount)/2;
+        // ocw = ocw + (ocwMin + 2*failCount)/2;
+        // ocw = ocw + ocwMin/2;
         if(ocw > ocwMax) ocw = ocwMax;
 
         count++;

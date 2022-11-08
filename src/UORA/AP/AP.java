@@ -19,7 +19,9 @@ public class AP {
     public static int NUM_STATION = 0;
     public static int NUM_TRANSMISSION = 100000;
     public static int SIFS = 16; // 단위 us
-    public static int DTI = 30; // 단위 us
+
+    public static int DIFS = 18;
+    public static int DTI = 32; // 단위 us
     public static int NUM_RU = 8;
     public static long PK_SIZE = 1000; // 단위 byte
     public static int TF_SIZE = 89; // 단위 byte
@@ -28,7 +30,7 @@ public class AP {
     public static double TF_TRANSMIT_TIME = ((double)(TF_SIZE * 8))/((double)(DATA_RATE * 1000));
     public static double BA_TRANSMIT_TIME = ((double)(BA_SIZE*8))/((double)(DATA_RATE*1000));
     private static double PK_TRANSMIT_TIME = ((double)(PK_SIZE * 8))/((double)(DATA_RATE * 1000));
-    public static double TWT_INTERVAL = DTI + TF_TRANSMIT_TIME + (2*SIFS) + BA_TRANSMIT_TIME; // us
+    public static double TWT_INTERVAL = DIFS + TF_TRANSMIT_TIME + (2*SIFS) + DTI + BA_TRANSMIT_TIME; // us
 
     private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
@@ -38,6 +40,8 @@ public class AP {
     public static int total_transmit;
     public static int collisionCount;
     public static int successCount;
+
+    public static double ruCollisionRate;
 
     public static ArrayList<Double> MBsList = new ArrayList<>();
     public static ArrayList<Double> successRateList = new ArrayList<>();
@@ -52,15 +56,24 @@ public class AP {
 
     public static ArrayList<Double> avgOCW = new ArrayList<>();
 
+    public static ArrayList<Double> ruCollisionRateList = new ArrayList<>();
+
     public static FileWriter fileWriter;
 
     static {
         try {
-            fileWriter = new FileWriter("testocwcontrol.txt", true);
+            fileWriter = new FileWriter("개선된_MY_OCW_CONTROL.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
+    public void addStation(int amount) {
+        for(int i=0; i<amount; i++)
+            addStation(StationFactory.createTestStation());
+    }
+
 
     public void setNumStation(int numStation) {
         NUM_STATION = numStation;
@@ -71,6 +84,7 @@ public class AP {
         total_transmit = 0;
         collisionCount = 0;
         successCount = 0;
+        ruCollisionRate = 0;
     }
 
     public void initStaticArray() {
@@ -82,18 +96,20 @@ public class AP {
         failCountList = new ArrayList<>();
         txTryCount = new ArrayList<>();
         avgOCW = new ArrayList<>();
+        ruCollisionRateList = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
 
-        Double MBs = new Double(0);
-        Double successRate = new Double(0);
-        Double totalTransfer = new Double(0);
-        Double successCount = new Double(0);
-        Double alpha = new Double(0);
-        Double failCount = new Double(0);
-        Double txTry = new Double(0);
-        Double avg_ocw = new Double(0);
+        Double MBs = Double.valueOf(0d);
+        Double successRate = Double.valueOf(0d);
+        Double totalTransfer = Double.valueOf(0d);
+        Double successCount = Double.valueOf(0d);
+        Double alpha = Double.valueOf(0d);
+        Double failCount = Double.valueOf(0d);
+        Double txTry = Double.valueOf(0d);
+        Double avg_ocw = Double.valueOf(0d);
+        Double ru_collision_rate = Double.valueOf(0d);
 
         int num_simulate = MBsList.size();
 
@@ -107,9 +123,10 @@ public class AP {
             failCount += failCountList.get(i);
             txTry += txTryCount.get(i);
             avg_ocw += avgOCW.get(i);
+            ru_collision_rate += ruCollisionRateList.get(i);
         }
 
-        Double count = new Double(num_simulate);
+        Double count = Double.valueOf(num_simulate);
 
         MBs /= count;
         successRate /= count;
@@ -119,6 +136,7 @@ public class AP {
         failCount /= count;
         txTry /= count;
         avg_ocw /= count;
+        ru_collision_rate /= count;
 
         System.out.println();
         System.out.println();
@@ -136,6 +154,7 @@ public class AP {
         // fileWriter.write(MBs + ",");
         System.out.println("평균 성공률 : " + successRate);
         System.out.println("평균 충돌 발생률 : " + (100-successRate));
+        System.out.println("ruCollisionRate : " + ru_collision_rate);
         System.out.println("평균 전송 시도 횟수 : " + totalTransfer);
         System.out.println("평균 알파 : " + alpha);
         System.out.println("평균 재전송 횟수 : " + failCount);
@@ -143,14 +162,18 @@ public class AP {
         System.out.println("평균 OCW : " + avg_ocw);
         // fileWriter.write(totalTransfer + ",");
 
+        // fileWriter.write("NUM_STATION,THROUGHPUT,SUCCESS_RATE,COLLISION_RATE,NUM_TRANSMIT,ALPHA,NUM_FAIL,DELAY,CONTENTION_STATION_NUM,AVG_OCW,RU_COLLISION_RATE\n");
         fileWriter.write(stations.size() + ",");
         fileWriter.write(MBs + ",");
         fileWriter.write(successRate + ",");
+        fileWriter.write((100-successRate) + ",");
         fileWriter.write(totalTransfer + ",");
         fileWriter.write(alpha + ",");
         fileWriter.write(failCount + ",");
+        fileWriter.write(failCount*TWT_INTERVAL + ",");
         fileWriter.write(txTry + ",");
-        fileWriter.write(avg_ocw + "\n");
+        fileWriter.write(avg_ocw + ",");
+        fileWriter.write(ru_collision_rate + "\n");
 
         System.out.println();
         System.out.println();
@@ -193,6 +216,8 @@ public class AP {
         avgOCW.add(avg);
         failCountList.add(d);
 
+        ruCollisionRateList.add(ruCollisionRate);
+
     }
 
     // STA 수에 따른 성능 측정
@@ -201,12 +226,6 @@ public class AP {
         addStation(NUM_STATION);
         innerRun(NUM_TRANSMISSION);
 
-    }
-
-    // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
-    public void addStation(int amount) {
-        for(int i=0; i<amount; i++)
-            addStation(StationFactory.createTestStation());
     }
 
     public void removeStation(int amount) {
@@ -301,6 +320,8 @@ public class AP {
 
         int i = 0;
 
+        int failRUCount = 0;
+
         for(RARU ru : ruList) {
 
             List<StationInterface> stationList = ru.getStations();
@@ -308,6 +329,8 @@ public class AP {
             int num_station = stationList.size();
 
             if(num_station == 0) continue;
+
+            if(num_station != 0 && num_station != 1) failRUCount++;
 
             total_transmit += num_station;
             i += num_station;
@@ -324,6 +347,10 @@ public class AP {
                 station.receiveACK(isSuccess);
             }
         }
+
+        double tmp = (double)failRUCount * (double)100 / (double)NUM_RU;
+        double newResultRate = 0.125;
+        ruCollisionRate = (((double)1) - newResultRate)*ruCollisionRate + newResultRate*tmp;
 
         txTryCount.add(i);
 

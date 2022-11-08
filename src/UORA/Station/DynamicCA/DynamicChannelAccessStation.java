@@ -18,6 +18,7 @@ public class DynamicChannelAccessStation implements StationInterface {
     // 전송에 성공하면 초기화
     private int failCount = 0;
     private double prevFailCount = 0;
+    private double filteredFailCount = 0;
     private int count = 0;
 
     public DynamicChannelAccessStation(OBOInterface obo) {
@@ -33,7 +34,7 @@ public class DynamicChannelAccessStation implements StationInterface {
         obo.minus(
                 tf.getTheNumberOfRARU(),
                 tf.getThe_number_of_sta(),
-                failCount
+                filteredFailCount + (double)failCount
         );
 
         // 전송 가능하다면 전송
@@ -48,9 +49,11 @@ public class DynamicChannelAccessStation implements StationInterface {
         if(isSuccess) {
             // 원래 코드
             count++;
-            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)failCount/count;
+            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)filteredFailCount/count;
 
+            filteredFailCount = 0.7*filteredFailCount + 0.3*failCount;
             failCount = 0;
+
             obo.success();
         }
         else {
