@@ -62,7 +62,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("개선된_MY_OCW_CONTROL.txt", true);
+            fileWriter = new FileWriter("나의OBO제어+나의OCW제어2.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -296,7 +296,7 @@ public class AP {
     // 트리거 프레임 전송
     public void sendTF() {
 
-        triggerFrame = new TriggerFrame(stations.size());
+        triggerFrame = new TriggerFrame(stations.size(), ruCollisionRate);
         allocateRU();
 
         for(StationInterface station : stations) {
@@ -349,7 +349,7 @@ public class AP {
         }
 
         double tmp = (double)failRUCount * (double)100 / (double)NUM_RU;
-        double newResultRate = 0.125;
+        double newResultRate = 0.3;
         ruCollisionRate = (((double)1) - newResultRate)*ruCollisionRate + newResultRate*tmp;
 
         txTryCount.add(i);

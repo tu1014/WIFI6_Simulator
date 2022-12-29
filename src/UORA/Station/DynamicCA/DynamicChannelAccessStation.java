@@ -34,7 +34,8 @@ public class DynamicChannelAccessStation implements StationInterface {
         obo.minus(
                 tf.getTheNumberOfRARU(),
                 tf.getThe_number_of_sta(),
-                filteredFailCount + (double)failCount
+                filteredFailCount + (double)failCount,
+                tf.getCollision_ru_rate()
         );
 
         // 전송 가능하다면 전송

@@ -41,6 +41,7 @@ public class TestOBO implements OBOInterface {
         double num_raru = params[0];
         double num_station = params[1];
         double num_fail = params[2];
+        double collision_ru_rate = params[3] / 100; // 아마 사용 안할 듯
 
         failCount = num_fail;
 
@@ -49,7 +50,10 @@ public class TestOBO implements OBOInterface {
         else num_station -= num_raru;
         //////
 
-        double networkStatus = num_raru/(num_station+num_fail);
+        double networkStatus;
+        networkStatus = num_raru/(num_station+num_fail);
+        // networkStatus = num_raru / (num_station + (1 + collision_ru_rate));
+
 
         calAlpha(networkStatus);
         obo -= a*num_raru;
@@ -80,7 +84,7 @@ public class TestOBO implements OBOInterface {
     public void success() {
 
         ocw = ocwMin + failCount;
-        // ocw = ocwMin + 2*failCount;
+        ocw = ocwMin + 2*failCount;
         // ocw = ocw/2;
         if(ocw < ocwMin) ocw = ocwMin;
 
@@ -93,8 +97,8 @@ public class TestOBO implements OBOInterface {
     @Override
     public void fail() {
 
-        ocw = ocw + (ocwMin + failCount)/2;
-        // ocw = ocw + (ocwMin + 2*failCount)/2;
+        // ocw = ocw + (ocwMin + failCount)/2;
+        ocw = ocw + (ocwMin + 2*failCount)/2;
         // ocw = ocw + ocwMin/2;
         if(ocw > ocwMax) ocw = ocwMax;
 
