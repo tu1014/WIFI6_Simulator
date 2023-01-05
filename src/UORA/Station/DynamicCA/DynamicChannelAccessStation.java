@@ -35,6 +35,7 @@ public class DynamicChannelAccessStation implements StationInterface {
                 tf.getTheNumberOfRARU(),
                 tf.getThe_number_of_sta(),
                 filteredFailCount + (double)failCount,
+                // failCount,
                 tf.getCollision_ru_rate()
         );
 

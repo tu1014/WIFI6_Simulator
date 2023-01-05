@@ -62,7 +62,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("나의OBO제어+나의OCW제어2.txt", true);
+            fileWriter = new FileWriter("나의OBO제어+나의OCW제어.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

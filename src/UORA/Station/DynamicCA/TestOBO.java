@@ -24,7 +24,7 @@ public class TestOBO implements OBOInterface {
     private int count = 0; // OCW 평균 필터에 사용
 
     private double failCount = 0;
-
+    private double nru = -1;
 
     private int stationNum;
 
@@ -42,6 +42,9 @@ public class TestOBO implements OBOInterface {
         double num_station = params[1];
         double num_fail = params[2];
         double collision_ru_rate = params[3] / 100; // 아마 사용 안할 듯
+
+        if(nru == -1) nru = num_raru;
+        else nru = (((double)1) - newResultRate)*nru + newResultRate*num_raru;
 
         failCount = num_fail;
 
@@ -83,9 +86,12 @@ public class TestOBO implements OBOInterface {
     @Override
     public void success() {
 
-        ocw = ocwMin + failCount;
-        ocw = ocwMin + 2*failCount;
+        // ocw = ocwMin + failCount;
         // ocw = ocw/2;
+        // ocw = ocwMin + (nru - a)/nru*failCount;
+
+        ocw = (1 + (nru - a)/nru/2) * ocwMin; // v2, 3, 4
+
         if(ocw < ocwMin) ocw = ocwMin;
 
         count++;
@@ -97,9 +103,13 @@ public class TestOBO implements OBOInterface {
     @Override
     public void fail() {
 
-        // ocw = ocw + (ocwMin + failCount)/2;
-        ocw = ocw + (ocwMin + 2*failCount)/2;
-        // ocw = ocw + ocwMin/2;
+        // ocw = ocw + (ocwMin + failCount)/2; // best
+        // ocw = ocw + ocwMin/2; // 기존 논문
+        // ocw = ocw + (ocwMin + (nru - a)/nru*failCount)/2; // v1
+
+        // ocw = ocw + ((1 + (nru - a)/nru/2) * ocwMin)/2; // v3
+        ocw = ocw + ((nru - a)/nru * ocwMin)/2;         // v5
+
         if(ocw > ocwMax) ocw = ocwMax;
 
         count++;
