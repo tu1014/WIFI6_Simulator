@@ -2,6 +2,7 @@ package UORA.AP;
 
 import UORA.Station.StationFactory;
 import UORA.Station.StationInterface;
+import UORA.Writer;
 import UORA.resource.RARU;
 import UORA.resource.TriggerFrame;
 
@@ -35,6 +36,12 @@ public class AP {
     private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
 
+    private boolean TIME_FLAG = false;
+
+    public void setTIME_FLAG(boolean flag) {
+        TIME_FLAG = flag;
+    }
+
 
     // 성능 측정에 사용할 값들
     public static int total_transmit;
@@ -60,9 +67,11 @@ public class AP {
 
     public static FileWriter fileWriter;
 
+    public int count = 0;
+
     static {
         try {
-            fileWriter = new FileWriter("나의OBO제어+나의OCW제어.txt", true);
+            fileWriter = new FileWriter("DUMMY.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,13 +79,19 @@ public class AP {
 
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
-        for(int i=0; i<amount; i++)
-            addStation(StationFactory.createTestStation());
+        for(int i=0; i<amount; i++) {
+            // addStation(StationFactory.createMyFinalIdea()); // 나의 기법
+            // addStation(StationFactory.createStandardStation()); // 표준
+            addStation(StationFactory.createOptimalCollisionStation());
+        }
     }
-
 
     public void setNumStation(int numStation) {
         NUM_STATION = numStation;
+    }
+
+    public void setNumTransmission(int numTransmission) {
+        NUM_TRANSMISSION = numTransmission;
     }
 
 
@@ -280,8 +295,13 @@ public class AP {
 
     public void innerRun(int amount) {
         for(int i=0; i<amount; i++) {
+            count++;
             sendTF();
-            sendACK();
+            try {
+                sendACK();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -289,6 +309,7 @@ public class AP {
     }
 
     public void init() {
+        count = 0;
         stations = new ArrayList<>();
         initPerformanceStatus();
     }
@@ -314,7 +335,7 @@ public class AP {
 
     }
 
-    public void sendACK() {
+    public void sendACK() throws IOException {
 
         List<RARU> ruList = triggerFrame.getRuList();
 
@@ -353,6 +374,28 @@ public class AP {
         ruCollisionRate = (((double)1) - newResultRate)*ruCollisionRate + newResultRate*tmp;
 
         txTryCount.add(i);
+
+        // x축이 시간일 때 측정을 위한 코드
+        // TF 100번 마다 측정
+        if (TIME_FLAG && count % 100 == 0 ) {
+
+            double mbps = (double)(((double)(successCount*PK_SIZE*8))/((double)(NUM_TRANSMISSION*TWT_INTERVAL)));
+            double MBs = mbps / (double)8;
+            Writer.fileWriter.write(MBs + ",");
+
+            ///
+
+            double collisionRate = ((double)collisionCount/(double)total_transmit)*(double)100;
+            Writer.fileWriter.write(collisionRate + ",");
+
+            double avg = 0;
+            for(StationInterface station : stations) {
+                avg += station.getAvgOCW();
+            }
+            avg /= stations.size();
+            Writer.fileWriter.write(avg + "\n");
+
+        }
 
     }
 

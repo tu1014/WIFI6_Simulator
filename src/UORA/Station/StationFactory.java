@@ -4,6 +4,8 @@ import UORA.Station.CA.ChannelAccessOBO;
 import UORA.Station.DynamicCA.DynamicChannelAccessOBO;
 import UORA.Station.DynamicCA.DynamicChannelAccessStation;
 import UORA.Station.DynamicCA.TestOBO;
+import UORA.Station.OptimalCollision.OptimalCollisionOBO;
+import UORA.Station.OptimalCollision.OptimalCollisionStation;
 import UORA.Station.Standard.StandardOBO;
 import UORA.Station.Standard.StandardStation;
 
@@ -21,10 +23,13 @@ public class StationFactory {
         return new StandardStation(new ChannelAccessOBO());
     }
 
-    public static StationInterface createTestStation() {
+    public static StationInterface createMyFinalIdea() { // 현재 내 최종 아이디어
         return new DynamicChannelAccessStation(new TestOBO(8));
     }
 
+    public static StationInterface createOptimalCollisionStation() {
+        return new OptimalCollisionStation(new OptimalCollisionOBO(8));
+    }
 
 
 }
