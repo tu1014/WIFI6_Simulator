@@ -39,8 +39,12 @@ public class TriggerFrame {
 
     @Override
     public String toString() {
-        return "TriggerFrame{" +
-                "ruList=" + ruList +
-                '}';
+        String res = "TF{\n";
+        for(RARU ru : ruList) {
+            res += ("\t" + ru + "\n");
+        }
+        res += "}";
+
+        return res;
     }
 }

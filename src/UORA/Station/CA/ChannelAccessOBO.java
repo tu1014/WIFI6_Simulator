@@ -10,7 +10,7 @@ public class ChannelAccessOBO implements OBOInterface {
     private double obo;
     private double ocw;
 
-    private double a = 0.5; // 알파
+    private double a = 1.5; // 알파
 
     private static double ocwMin = 8;
     private static double ocwMax = 64;

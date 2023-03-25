@@ -51,6 +51,8 @@ public class AP {
     public static double ruIdleRate;
     private static int ru_counter;
 
+    private static double txTry;
+
     public static ArrayList<Double> MBsList = new ArrayList<>();
     public static ArrayList<Double> successRateList = new ArrayList<>();
     public static ArrayList<Integer> totalTransmitList = new ArrayList<>();
@@ -60,7 +62,7 @@ public class AP {
 
     public static ArrayList<Double> failCountList = new ArrayList<>();
 
-    public static ArrayList<Integer> txTryCount = new ArrayList<>();
+    public static ArrayList<Double> txTryCount = new ArrayList<>();
 
     public static ArrayList<Double> avgOCW = new ArrayList<>();
 
@@ -76,7 +78,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("FINAL_DPCNS.txt", true);
+            fileWriter = new FileWriter("FINAL_PCS(1.5).txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -85,9 +87,9 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++) {
-            addStation(StationFactory.createMyFinalIdea()); // 나의 기법
+            // addStation(StationFactory.createMyFinalIdea()); // 나의 기법
             // addStation(StationFactory.createStandardStation()); // 표준
-            // addStation(StationFactory.createChannelAccessStation()); // 기존 논문
+            addStation(StationFactory.createChannelAccessStation()); // 기존 논문
         }
     }
 
@@ -108,6 +110,7 @@ public class AP {
         ruSuccessRate = 0;
         ruIdleRate = 0;
         ru_counter = 0;
+        txTry = 0;
     }
 
     public void initStaticArray() {
@@ -261,6 +264,8 @@ public class AP {
         ruSuccessRateList.add(ruSuccessRate);
         ruIdleRateList.add(ruIdleRate);
 
+        txTryCount.add(txTry);
+
     }
 
     // STA 수에 따른 성능 측정
@@ -317,7 +322,7 @@ public class AP {
 
         List<RARU> ruList = triggerFrame.getRuList();
 
-        int i = 0; // 한 번의 TF에서 전송을 시도한 STA의 수를 측정하기 위한 변수
+        int num_tx_try_station = 0; // 한 번의 TF에서 전송을 시도한 STA의 수를 측정하기 위한 변수
 
         int failRUCount = 0;
         int successRUCount = 0;
@@ -343,7 +348,7 @@ public class AP {
             }
 
             total_transmit += num_station;
-            i += num_station;
+            num_tx_try_station += num_station;
 
             for(StationInterface station : stationList) {
 
@@ -367,7 +372,10 @@ public class AP {
         ruSuccessRate = (double)(ru_counter-1)/(double)ru_counter*ruSuccessRate + (double)successRURate/ru_counter;
         ruIdleRate = (double)(ru_counter-1)/(double)ru_counter*ruIdleRate + (double)idleRURate/ru_counter;
 
-        txTryCount.add(i);
+
+        // 여기서 평균 필터 적용하고, write funtion에서 리스트에 add 하도록 수정해보자
+        txTry = (double)(ru_counter-1)/(double)ru_counter*txTry + (double)num_tx_try_station/ru_counter;
+
 
         // x축이 시간일 때 측정을 위한 코드
         // TF 100번 마다 측정
@@ -390,6 +398,8 @@ public class AP {
             Writer.fileWriter.write(avg + "\n");
 
         }
+
+        // System.out.println(triggerFrame);
 
     }
 

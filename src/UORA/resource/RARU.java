@@ -23,9 +23,7 @@ public class RARU {
 
     @Override
     public String toString() {
-        return "RARU{" +
-                "id=" + id +
-                ", stations=" + stations +
+        return "RARU{" + stations +
                 '}';
     }
 }

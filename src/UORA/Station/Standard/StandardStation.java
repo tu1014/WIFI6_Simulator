@@ -28,7 +28,7 @@ public class StandardStation implements StationInterface {
 
 
     public StandardStation(OBOInterface obo) {
-        id = idCounter++;
+        id = ++idCounter;
         this.obo = obo;
     }
 

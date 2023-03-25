@@ -30,6 +30,9 @@ public class Main {
 
         AP.fileWriter.close();
 
+        /*test1(50);
+        AP.fileWriter.close();*/
+
 
     }
 

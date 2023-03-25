@@ -12,6 +12,10 @@ public class DynamicChannelAccessStation implements StationInterface {
 
     private Random random = new Random();
 
+    private int id;
+
+    private static int idCounter = 0;
+
     private OBOInterface obo;
 
     // 네트워크 상태를 파악하기 위한 변수
@@ -25,6 +29,7 @@ public class DynamicChannelAccessStation implements StationInterface {
     private int current_dti = 0;
 
     public DynamicChannelAccessStation(OBOInterface obo) {
+        id = ++idCounter;
         this.obo = obo;
     }
 
@@ -105,6 +110,11 @@ public class DynamicChannelAccessStation implements StationInterface {
     @Override
     public double getTotalDTI() {
         return total_dti;
+    }
+
+    @Override
+    public String toString() {
+        return id + "번 STA";
     }
 
 }
