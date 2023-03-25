@@ -21,12 +21,18 @@ public class DynamicChannelAccessStation implements StationInterface {
     private double filteredFailCount = 0;
     private int count = 0;
 
+    private double total_dti = 0;
+    private int current_dti = 0;
+
     public DynamicChannelAccessStation(OBOInterface obo) {
         this.obo = obo;
     }
 
     @Override
     public void receiveTF(TriggerFrame tf) {
+
+        // 지연시간 체크를 위한 코드
+        current_dti++;
 
         obo.setStationNum(tf.getThe_number_of_sta());
 
@@ -51,12 +57,19 @@ public class DynamicChannelAccessStation implements StationInterface {
         if(isSuccess) {
             // 원래 코드
             count++;
-            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)filteredFailCount/count;
+            prevFailCount = (double)(count-1)/(double)count*prevFailCount + (double)failCount/count;
 
             filteredFailCount = 0.7*filteredFailCount + 0.3*failCount;
             failCount = 0;
 
             obo.success();
+
+            // 지연시간 체크를 위한 코드
+            total_dti += current_dti;
+            current_dti = 0;
+
+
+
         }
         else {
             failCount++;
@@ -87,6 +100,11 @@ public class DynamicChannelAccessStation implements StationInterface {
     @Override
     public double getAvgOCW() {
         return obo.getAvgOCW();
+    }
+
+    @Override
+    public double getTotalDTI() {
+        return total_dti;
     }
 
 }

@@ -23,7 +23,7 @@ public class TestOBO implements OBOInterface {
     private double prevOCW = 0; // 성능 측정을 위한 값
     private int count = 0; // OCW 평균 필터에 사용
 
-    private double failCount = 0;
+    // private double failCount = 0;
     private double nru = -1;
 
     private int stationNum;
@@ -46,11 +46,11 @@ public class TestOBO implements OBOInterface {
         if(nru == -1) nru = num_raru;
         else nru = (((double)1) - newResultRate)*nru + newResultRate*num_raru;
 
-        failCount = num_fail;
+        // failCount = num_fail;
 
         //////
         if(num_station <= num_raru) num_station = 1;
-        else num_station -= num_raru;
+        else num_station -= (num_raru-1);
         //////
 
         double networkStatus;

@@ -13,4 +13,6 @@ public interface StationInterface {
 
     double getAvgOCW();
 
+    public double getTotalDTI();
+
 }

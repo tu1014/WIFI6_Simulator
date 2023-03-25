@@ -33,7 +33,7 @@ public class AP {
     private List<StationInterface> stations;
     private TriggerFrame triggerFrame;
 
-    public int numBT = 5; // 범석 아이디어의 비지톤 슬롯 개수
+    public int numBT = 6; // 범석 아이디어의 비지톤 슬롯 개수
 
     public static int slotTime = 9; // us
 
@@ -75,7 +75,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("BS_BUSY_N5.txt", true);
+            fileWriter = new FileWriter("BS_BUSY_N6.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

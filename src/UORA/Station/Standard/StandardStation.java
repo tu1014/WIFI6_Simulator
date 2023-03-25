@@ -21,6 +21,12 @@ public class StandardStation implements StationInterface {
     private double prevFailCount = 0;
     private int count = 0;
 
+
+    private double total_dti = 0;
+    private int current_dti = 0;
+
+
+
     public StandardStation(OBOInterface obo) {
         id = idCounter++;
         this.obo = obo;
@@ -28,6 +34,10 @@ public class StandardStation implements StationInterface {
 
     @Override
     public void receiveTF(TriggerFrame tf) {
+
+        // 지연시간 체크를 위한 코드
+        current_dti++;
+
 
         // System.out.println("<" + id + "번 STA>");
         // System.out.println("tf 수신 이전 obo : " + obo);
@@ -57,6 +67,11 @@ public class StandardStation implements StationInterface {
             failCount = 0;
 
             obo.success();
+
+            // 지연시간 체크를 위한 코드
+            total_dti += current_dti;
+            current_dti = 0;
+
         }
         else {
             failCount++;
@@ -87,6 +102,11 @@ public class StandardStation implements StationInterface {
     @Override
     public double getAvgOCW() {
         return obo.getAvgOCW();
+    }
+
+    @Override
+    public double getTotalDTI() {
+        return total_dti;
     }
 
 

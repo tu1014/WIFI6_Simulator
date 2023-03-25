@@ -11,16 +11,24 @@ public class Main {
 
         // test 1
 
-        for(int i=1; i<=100; i++) {
+        /*for(int i=1; i<=100; i++) {
             test1(i);
         }
 
-        AP.fileWriter.close();
+        AP.fileWriter.close();*/
 
 
 
         // test 2
         // test2(75); // 5 15 75
+
+
+        // test3
+        test1(1);
+        for(int i = 5; i<=100; i+=5)
+            test1(i);
+
+        AP.fileWriter.close();
 
 
     }

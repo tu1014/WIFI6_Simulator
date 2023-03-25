@@ -90,4 +90,9 @@ public class OptimalCollisionStation implements StationInterface {
         return obo.getAvgOCW();
     }
 
+    @Override
+    public double getTotalDTI() {
+        return 0;
+    }
+
 }

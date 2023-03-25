@@ -6,10 +6,8 @@ import UORA.Writer;
 import UORA.resource.RARU;
 import UORA.resource.TriggerFrame;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,9 @@ public class AP {
     public static int successCount;
 
     public static double ruCollisionRate;
+    public static double ruSuccessRate;
+    public static double ruIdleRate;
+    private static int ru_counter;
 
     public static ArrayList<Double> MBsList = new ArrayList<>();
     public static ArrayList<Double> successRateList = new ArrayList<>();
@@ -64,6 +65,10 @@ public class AP {
     public static ArrayList<Double> avgOCW = new ArrayList<>();
 
     public static ArrayList<Double> ruCollisionRateList = new ArrayList<>();
+    public static ArrayList<Double> ruSuccessRateList = new ArrayList<>();
+    public static ArrayList<Double> ruIdleRateList = new ArrayList<>();
+
+    public static ArrayList<Double> delayList = new ArrayList<>();
 
     public static FileWriter fileWriter;
 
@@ -71,7 +76,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("DUMMY.txt", true);
+            fileWriter = new FileWriter("2023_PCS(1.5).txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -82,8 +87,7 @@ public class AP {
         for(int i=0; i<amount; i++) {
             // addStation(StationFactory.createMyFinalIdea()); // 나의 기법
             // addStation(StationFactory.createStandardStation()); // 표준
-            // addStation(StationFactory.createOptimalCollisionStation());
-            addStation(StationFactory.createOptimalAlphaStation());
+            addStation(StationFactory.createChannelAccessStation()); // 기존 논문
         }
     }
 
@@ -101,6 +105,9 @@ public class AP {
         collisionCount = 0;
         successCount = 0;
         ruCollisionRate = 0;
+        ruSuccessRate = 0;
+        ruIdleRate = 0;
+        ru_counter = 0;
     }
 
     public void initStaticArray() {
@@ -113,6 +120,9 @@ public class AP {
         txTryCount = new ArrayList<>();
         avgOCW = new ArrayList<>();
         ruCollisionRateList = new ArrayList<>();
+        ruSuccessRateList = new ArrayList<>();
+        ruIdleRateList = new ArrayList<>();
+        delayList = new ArrayList<>();
     }
 
     public void printAvgPerformance() throws IOException {
@@ -126,6 +136,9 @@ public class AP {
         Double txTry = Double.valueOf(0d);
         Double avg_ocw = Double.valueOf(0d);
         Double ru_collision_rate = Double.valueOf(0d);
+        Double ru_success_rate = Double.valueOf(0d);
+        Double ru_idle_rate = Double.valueOf(0d);
+        Double delay = Double.valueOf(0);
 
         int num_simulate = MBsList.size();
 
@@ -140,6 +153,9 @@ public class AP {
             txTry += txTryCount.get(i);
             avg_ocw += avgOCW.get(i);
             ru_collision_rate += ruCollisionRateList.get(i);
+            ru_success_rate += ruSuccessRateList.get(i);
+            ru_idle_rate += ruIdleRateList.get(i);
+            delay += delayList.get(i);
         }
 
         Double count = Double.valueOf(num_simulate);
@@ -153,6 +169,9 @@ public class AP {
         txTry /= count;
         avg_ocw /= count;
         ru_collision_rate /= count;
+        ru_success_rate /= count;
+        ru_idle_rate /= count;
+        delay /= count;
 
         System.out.println();
         System.out.println();
@@ -186,10 +205,12 @@ public class AP {
         fileWriter.write(totalTransfer + ",");
         fileWriter.write(alpha + ",");
         fileWriter.write(failCount + ",");
-        fileWriter.write(failCount*TWT_INTERVAL + ",");
+        fileWriter.write(delay + ","); // delay
         fileWriter.write(txTry + ",");
         fileWriter.write(avg_ocw + ",");
-        fileWriter.write(ru_collision_rate + "\n");
+        fileWriter.write(ru_collision_rate + ",");
+        fileWriter.write(ru_success_rate + ",");
+        fileWriter.write(ru_idle_rate + "\n");
 
         System.out.println();
         System.out.println();
@@ -223,16 +244,22 @@ public class AP {
 
         double d = 0;
         double avg = 0;
+        double delay = 0;
         for(StationInterface station : stations) {
             d += station.getFailCount();
             avg += station.getAvgOCW();
+            delay += station.getTotalDTI();
         }
         d /= stations.size();
         avg /= stations.size();
+        delay = delay / (double)successCount * (double)TWT_INTERVAL;
         avgOCW.add(avg);
         failCountList.add(d);
+        delayList.add(delay);
 
         ruCollisionRateList.add(ruCollisionRate);
+        ruSuccessRateList.add(ruSuccessRate);
+        ruIdleRateList.add(ruIdleRate);
 
     }
 
@@ -290,9 +317,11 @@ public class AP {
 
         List<RARU> ruList = triggerFrame.getRuList();
 
-        int i = 0;
+        int i = 0; // 한 번의 TF에서 전송을 시도한 STA의 수를 측정하기 위한 변수
 
         int failRUCount = 0;
+        int successRUCount = 0;
+        int idleRUCount = 0;
 
         for(RARU ru : ruList) {
 
@@ -300,9 +329,18 @@ public class AP {
 
             int num_station = stationList.size();
 
-            if(num_station == 0) continue;
+            if(num_station == 0) {
+                idleRUCount++;
+                continue;
+            }
 
-            if(num_station != 0 && num_station != 1) failRUCount++;
+            else if (num_station == 1) {
+                successRUCount++;
+            }
+
+            else if(num_station != 0 && num_station != 1) {
+                failRUCount++;
+            }
 
             total_transmit += num_station;
             i += num_station;
@@ -320,9 +358,14 @@ public class AP {
             }
         }
 
-        double tmp = (double)failRUCount * (double)100 / (double)NUM_RU;
-        double newResultRate = 0.3;
-        ruCollisionRate = (((double)1) - newResultRate)*ruCollisionRate + newResultRate*tmp;
+        double failRURate = (double)failRUCount * (double)100 / (double)NUM_RU;
+        double successRURate = (double)successRUCount * (double)100 / (double) NUM_RU;
+        double idleRURate = (double)idleRUCount * (double)100 / (double) NUM_RU;
+
+        ru_counter++;
+        ruCollisionRate = (double)(ru_counter-1)/(double)ru_counter*ruCollisionRate + (double)failRURate/ru_counter;
+        ruSuccessRate = (double)(ru_counter-1)/(double)ru_counter*ruSuccessRate + (double)successRURate/ru_counter;
+        ruIdleRate = (double)(ru_counter-1)/(double)ru_counter*ruIdleRate + (double)idleRURate/ru_counter;
 
         txTryCount.add(i);
 
