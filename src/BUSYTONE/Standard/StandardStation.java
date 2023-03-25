@@ -12,7 +12,7 @@ import java.util.Random;
 public class StandardStation implements StationInterface {
 
     private static int idCounter = 0;
-    private static Random random = new Random();
+    private Random random = new Random();
 
     private AP ap;
     private int id;
@@ -21,6 +21,9 @@ public class StandardStation implements StationInterface {
     private int failCount = 0;
     private double prevFailCount = 0;
     private int count = 0;
+
+    private double total_dti = 0;
+    private int current_dti = 0;
 
     private int ru_id;
 
@@ -37,6 +40,9 @@ public class StandardStation implements StationInterface {
 
     @Override
     public void receiveTF(TriggerFrame tf) {
+
+        // 지연시간 체크를 위한 코드
+        current_dti++;
 
         // System.out.println("<" + id + "번 STA>");
         // System.out.println("tf 수신 이전 obo : " + obo);
@@ -112,6 +118,11 @@ public class StandardStation implements StationInterface {
             failCount = 0;
 
             obo.success();
+
+            // 지연시간 체크를 위한 코드
+            total_dti += current_dti;
+            current_dti = 0;
+
         }
         else {
             failCount++;
@@ -147,6 +158,11 @@ public class StandardStation implements StationInterface {
     @Override
     public String toString() {
         return id + "번 STA";
+    }
+
+    @Override
+    public double getTotalDTI() {
+        return total_dti;
     }
 
 

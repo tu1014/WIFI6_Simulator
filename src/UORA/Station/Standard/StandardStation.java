@@ -11,7 +11,7 @@ import java.util.Random;
 public class StandardStation implements StationInterface {
 
     private static int idCounter = 0;
-    private static Random random = new Random();
+    private Random random = new Random();
 
     private AP ap;
     private int id;

@@ -18,5 +18,6 @@ public interface StationInterface {
 
     public void sendBusyTone(TriggerFrame tf, int flagNumber);
     public void checkBusyTone(TriggerFrame tf, int flagNumber);
+    public double getTotalDTI();
 
 }

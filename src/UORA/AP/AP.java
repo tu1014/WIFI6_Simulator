@@ -76,7 +76,7 @@ public class AP {
 
     static {
         try {
-            fileWriter = new FileWriter("2023_PCS(1.5).txt", true);
+            fileWriter = new FileWriter("FINAL_DPCNS.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -85,9 +85,9 @@ public class AP {
     // 사용할 알고리즘을 변경하려면 StationFactory 에서 다른 메서드 사용
     public void addStation(int amount) {
         for(int i=0; i<amount; i++) {
-            // addStation(StationFactory.createMyFinalIdea()); // 나의 기법
+            addStation(StationFactory.createMyFinalIdea()); // 나의 기법
             // addStation(StationFactory.createStandardStation()); // 표준
-            addStation(StationFactory.createChannelAccessStation()); // 기존 논문
+            // addStation(StationFactory.createChannelAccessStation()); // 기존 논문
         }
     }
 
