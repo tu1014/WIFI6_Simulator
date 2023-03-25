@@ -9,18 +9,18 @@ public class OptimalCollisionOBO implements OBOInterface {
     private double obo;
     private double ocw;
 
-    private double a = 1; // 알파
-    private double newResultRate = 0.125; // 가중치
+    private final double a = 1; // 알파
+    private final double newResultRate = 0.125; // 가중치
 
-    private static double ocwMin = 8;
-    private static double ocwMax = 1023;
-    private static Random random = new Random();
+    private static final double ocwMin = 8;
+    private static final double ocwMax = 1023;
+    private static final Random random = new Random();
 
     private double prevOCW = 0; // 성능 측정을 위한 값
     private int count = 0; // OCW 평균 필터에 사용
 
-    private double failCount = 0;
-    private double nru = -1;
+    private final double failCount = 0;
+    private final double nru = -1;
 
     private int stationNum;
 
@@ -29,9 +29,9 @@ public class OptimalCollisionOBO implements OBOInterface {
     private int num_trans = 0;
     private int num_collision = 0;
 
-    private double OPTIMAL_RATE = 0.632;
-    private double MARGIN = 0.03;
-    private double K = 9.5;
+    private final double OPTIMAL_COLLISION_RATE = 0.632;
+    private final double MARGIN = 0.03;
+    private final double K = 10;
 
 
     public OptimalCollisionOBO(int ocw) {
@@ -65,10 +65,8 @@ public class OptimalCollisionOBO implements OBOInterface {
 
         initOCW();
 
-        if(ocw < ocwMin) ocw = ocwMin;
-
         count++;
-        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + ocw /count;
 
         initOBO();
     }
@@ -85,15 +83,15 @@ public class OptimalCollisionOBO implements OBOInterface {
         initOCW();
 
         count++;
-        prevOCW = (double)(count-1)/(double)count*prevOCW + (double)ocw/count;
+        prevOCW = (double)(count-1)/(double)count*prevOCW + ocw /count;
         initOBO();
     }
 
     private void initOCW() {
 
-        double e = collisionRate - OPTIMAL_RATE;
+        double e = collisionRate - OPTIMAL_COLLISION_RATE;
 
-        if(e > MARGIN || e <-MARGIN)
+        if(e <-MARGIN || MARGIN < e)
             ocw = ocw * (1 + K * e);
 
         if(ocw > ocwMax) ocw = ocwMax;

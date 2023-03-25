@@ -53,7 +53,7 @@ public class StandardOBO implements OBOInterface {
 
     @Override
     public void fail() {
-        ocw = 2*ocw + 1;
+        ocw = 2*ocw;
         if(ocw > ocwMax) ocw = ocwMax;
 
         count++;

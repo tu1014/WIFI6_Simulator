@@ -12,7 +12,7 @@ public class Main {
         // test 1
 
         for(int i=1; i<=100; i++) {
-            run(i);
+            test1(i);
         }
 
         AP.fileWriter.close();
@@ -20,24 +20,26 @@ public class Main {
 
 
         // test 2
-        /*test(75); // 5 15 75
-        Writer.fileWriter.close();*/
+        // test2(75); // 5 15 75
+
 
     }
 
-    public static void test(int numStation) {
+    public static void test2(int numStation) throws IOException {
 
         AP ap = new AP();
         ap.setNumStation(numStation);
         ap.initStaticArray();
+        ap.setTIME_FLAG(true);
 
         ap.init();
         ap.run();
 
+        Writer.fileWriter.close();
 
     }
 
-    public static void run(int numStation) throws IOException {
+    public static void test1(int numStation) throws IOException {
 
         AP ap = new AP();
         ap.setNumStation(numStation);

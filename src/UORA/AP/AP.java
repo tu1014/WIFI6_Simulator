@@ -82,7 +82,8 @@ public class AP {
         for(int i=0; i<amount; i++) {
             // addStation(StationFactory.createMyFinalIdea()); // 나의 기법
             // addStation(StationFactory.createStandardStation()); // 표준
-            addStation(StationFactory.createOptimalCollisionStation());
+            // addStation(StationFactory.createOptimalCollisionStation());
+            addStation(StationFactory.createOptimalAlphaStation());
         }
     }
 
@@ -240,56 +241,6 @@ public class AP {
 
         addStation(NUM_STATION);
         innerRun(NUM_TRANSMISSION);
-
-    }
-
-    public void removeStation(int amount) {
-        for(int i=0; i<amount; i++) {
-            stations.remove(0);
-        }
-    }
-
-    // 가중치에 따른 성능을 비교하기 위한 테스트 케이스
-    public void dynamicStation() {
-
-        // 10
-        addStation(10);
-        innerRun(10000);
-
-        // 20
-        addStation(10);
-        innerRun(10000);
-
-        // 50
-        addStation(30);
-        innerRun(10000);
-
-        // 40
-        removeStation(10);
-        innerRun(10000);
-
-        // 8
-        removeStation(32);
-        innerRun(10000);
-
-        // 23
-        addStation(15);
-        innerRun(10000);
-
-        // 40
-        addStation(17);
-        innerRun(10000);
-
-        // 40
-        innerRun(10000);
-
-        // 5
-        removeStation(35);
-        innerRun(10000);
-
-        // 50
-        addStation(45);
-        innerRun(10000);
 
     }
 

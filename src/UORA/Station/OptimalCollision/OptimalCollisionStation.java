@@ -33,7 +33,11 @@ public class OptimalCollisionStation implements StationInterface {
 
         // obo 감소
         obo.minus(
-                tf.getTheNumberOfRARU()
+                tf.getTheNumberOfRARU(),
+                tf.getThe_number_of_sta(),
+                filteredFailCount + (double)failCount,
+                // failCount,
+                tf.getCollision_ru_rate()
         );
 
         // 전송 가능하다면 전송

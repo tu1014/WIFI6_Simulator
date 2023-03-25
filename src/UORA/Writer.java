@@ -9,7 +9,7 @@ public class Writer {
 
     static {
         try {
-            fileWriter = new FileWriter("time-UORA.txt");
+            fileWriter = new FileWriter("time-UORA.txt", true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
